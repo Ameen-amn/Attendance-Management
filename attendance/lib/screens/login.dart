@@ -1,6 +1,10 @@
+import 'package:attendance/screens/home.dart';
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
 import './signUp.dart';
+
+import '../constants.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,7 +23,7 @@ class LoginScreen extends StatelessWidget {
               child: Text('Email'),
             ),
             const TextField(
-              decoration: InputDecoration(),
+              decoration: ktextFieldDecoration,
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -29,14 +33,18 @@ class LoginScreen extends StatelessWidget {
               child: Text('Password'),
             ),
             const TextField(
-              decoration: InputDecoration(),
+              decoration: ktextFieldDecoration,
               style: TextStyle(
                 fontSize: 20,
               ),
             ),
             Center(
                 child: ElevatedButton(
-                    onPressed: () {}, child: const Text('Login'))),
+                    style: kbutton,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(HomeScreen.routeName);
+                    },
+                    child: const Text('Login'))),
             Center(
               child: TextButton(
                   onPressed: () {

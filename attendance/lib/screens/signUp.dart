@@ -1,3 +1,4 @@
+import 'package:attendance/screens/classDetails.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatelessWidget {
@@ -78,11 +79,23 @@ class SignUp extends StatelessWidget {
                   ),
                 ),
                 Center(
-                    child: ElevatedButton(
-                        onPressed: () {}, child: const Text('Sign Up'))),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(ClassDetails.routeName);
+                    },
+                    child: const Text(
+                      'Sign Up',
+                    ),
+                  ),
+                ),
                 Center(
-                    child: TextButton(
-                        onPressed: () {}, child: const Text('Login'))),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Login',
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

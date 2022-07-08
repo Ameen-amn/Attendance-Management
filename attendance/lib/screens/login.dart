@@ -12,47 +12,55 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 45),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 4, top: 16),
-              child: Text('Email'),
-            ),
-            const TextField(
-              decoration: ktextFieldDecoration,
-              style: TextStyle(
-                fontSize: 20,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 45),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 4, top: 16),
+                child: Text('Email'),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 4, top: 16),
-              child: Text('Password'),
-            ),
-            const TextField(
-              decoration: ktextFieldDecoration,
-              style: TextStyle(
-                fontSize: 20,
+              const TextField(
+                decoration: ktextFieldDecoration,
+                style: TextStyle(
+                  fontSize: 20,
+                ),
               ),
-            ),
-            Center(
+              const Padding(
+                padding: EdgeInsets.only(bottom: 4, top: 16),
+                child: Text('Password'),
+              ),
+              const TextField(
+                decoration: ktextFieldDecoration,
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              Center(
+                  child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 30,
+                  bottom: 20,
+                ),
                 child: ElevatedButton(
-                    style: kbutton,
+                    style: kButtonStyle,
                     onPressed: () {
                       Navigator.of(context).pushNamed(HomeScreen.routeName);
                     },
-                    child: const Text('Login'))),
-            Center(
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, SignUp.routeName);
-                  },
-                  child: const Text('Sign Up')),
-            ),
-          ],
+                    child: const Text('Login')),
+              )),
+              Center(
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, SignUp.routeName);
+                    },
+                    child: const Text('Sign Up')),
+              ),
+            ],
+          ),
         ),
       ),
     );

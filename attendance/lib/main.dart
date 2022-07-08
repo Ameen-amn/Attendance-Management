@@ -17,14 +17,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          textTheme: const TextTheme(
+              headline3: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+          )),
+          scaffoldBackgroundColor: Colors.white,
+          primarySwatch: Colors.blue,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+            size: 24,
+          )),
       routes: {
         '/': (_) => const LoginScreen(),
-        SignUp.routeName: (_) => const SignUp(),
-        ClassDetails.routeName:(_)=>const ClassDetails(),
-        Subject.routeName:(_)=>const Subject(),
-        HomeScreen.routeName:(_)=>const HomeScreen(),
+        SignUp.routeName: (_) =>  SignUp(),
+        ClassDetails.routeName: (_) => const ClassDetails(),
+        Subject.routeName: (_) => const Subject(),
+        HomeScreen.routeName: (_) => const HomeScreen(),
       },
     );
   }

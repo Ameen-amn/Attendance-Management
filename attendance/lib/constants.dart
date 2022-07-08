@@ -43,21 +43,18 @@ const ktextFieldDecoration = InputDecoration(
 );
 
 // button Style
-ButtonStyle kButtonStyle =
-    ElevatedButton.styleFrom(fixedSize: const Size(130, 48),
-    
-    );
-
-
-
-
-
+ButtonStyle kButtonStyle = ElevatedButton.styleFrom(
+    fixedSize: const Size(130, 48),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    ));
 
 ButtonStyle kbutton = ButtonStyle(
   fixedSize: MaterialStateProperty.all(
     const Size(130, 42),
   ),
- 
 );
 
-//bottom Navigation Bar
+const ktextStyle =  TextStyle(
+  fontSize: 20,
+);

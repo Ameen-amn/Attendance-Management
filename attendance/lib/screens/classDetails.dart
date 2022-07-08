@@ -13,6 +13,7 @@ class ClassDetails extends StatefulWidget {
 }
 
 class _ClassDetailsState extends State<ClassDetails> {
+  int percentage = 50;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +33,7 @@ class _ClassDetailsState extends State<ClassDetails> {
             ),
             const TextField(
               decoration: ktextFieldDecoration,
-              style: TextStyle(
-                fontSize: 20,
-              ),
+              style: ktextStyle,
             ),
             const Padding(
               padding: EdgeInsets.only(
@@ -43,53 +42,91 @@ class _ClassDetailsState extends State<ClassDetails> {
               ),
               child: Text('  Number of Periods'),
             ),
-            const TextField(
-              decoration: ktextFieldDecoration,
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(
+            TextField(
+                decoration: ktextFieldDecoration.copyWith(
+                  suffixText: '/ Day',
+                  suffixStyle: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                style: ktextStyle),
+            Padding(
+              padding: const EdgeInsets.only(
                 bottom: 4,
                 top: 16,
               ),
-              child: Text('  Duration'),
+              child: Text(
+                '  Duration',
+                style: Theme.of(context).textTheme.headline3,
+              ),
             ),
-            const TextField(
-              decoration: ktextFieldDecoration,
-              style: TextStyle(
+            TextField(
+              decoration: ktextFieldDecoration.copyWith(
+                suffixText: ' Hour\'s',
+                suffixStyle: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              style: const TextStyle(
                 fontSize: 20,
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(0, 51, 0, 35),
-              child: Text('Attendance Percentage to be maintained'),
-            ),
-            const Center(
-              // %  chart
-
-              child: CircleAvatar(
-                radius: 60,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 45,
-                  child: Text(
-                    '100%',
-                    style: TextStyle(
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
+              child: Text(
+                'Attendance Percentage to be maintained',
+                style: Theme.of(context).textTheme.headline3,
               ),
             ),
-            ElevatedButton(onPressed: () {}, child: Text('s'))
+            PercentagePieChart(percentage: percentage),
+            Slider(
+              activeColor: const Color(0XFFEB1555),
+              inactiveColor: Colors.grey[350],
+              value: percentage.toDouble(),
+              onChanged: (newValue) {
+                setState(() {
+                  percentage = newValue.toInt();
+                });
+              },
+              min: 0,
+              max: 100,
+            )
           ],
         ),
       ),
       bottomNavigationBar: const BottomNavBar(
         name: 'Next',
         routeName: Subject.routeName,
+      ),
+    );
+  }
+}
+
+class PercentagePieChart extends StatelessWidget {
+  const PercentagePieChart({
+    Key? key,
+    required this.percentage,
+  }) : super(key: key);
+
+  final int percentage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      // %  chart
+
+      child: CircleAvatar(
+        radius: 55,
+        child: CircleAvatar(
+          backgroundColor: Colors.white,
+          radius: 45,
+          child: Text(
+            '$percentage%',
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          ),
+        ),
       ),
     );
   }

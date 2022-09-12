@@ -25,13 +25,14 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           primarySwatch: Colors.blue,
           iconTheme: const IconThemeData(
+            
             color: Colors.black,
             size: 24,
           )),
       routes: {
-        '/': (_) => const LoginScreen(),
+        '/': (_) => const ClassDetails(),
         SignUp.routeName: (_) =>  SignUp(),
-        ClassDetails.routeName: (_) => const ClassDetails(),
+        //ClassDetails.routeName: (_) => const ClassDetails(),
         Subject.routeName: (_) => const Subject(),
         HomeScreen.routeName: (_) => const HomeScreen(),
       },

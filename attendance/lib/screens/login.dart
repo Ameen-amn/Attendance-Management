@@ -1,14 +1,22 @@
 import 'package:attendance/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/fluent.dart';
 
 import '../constants.dart';
 import './signUp.dart';
 
 import '../constants.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool hide = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,11 +41,23 @@ class LoginScreen extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 4, top: 16),
                 child: Text('Password'),
               ),
-              const TextField(
-                decoration: ktextFieldDecoration,
-                style: TextStyle(
-                  fontSize: 20,
+              TextField(
+                decoration: ktextFieldDecoration.copyWith(
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          hide = !hide;
+                        });
+                      },
+                      icon: Iconify(
+                        hide
+                            ? Fluent.eye_hide_20_filled
+                            : Fluent.eye_12_regular,
+                        color: Colors.grey[600],
+                      )),
                 ),
+                obscureText: hide,
+                style: ktextStyle,
               ),
               Center(
                   child: Padding(

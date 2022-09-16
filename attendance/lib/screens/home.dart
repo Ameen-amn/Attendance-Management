@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/subjectDetailBar.dart';
+import '../widgets/percentage.dart';
+import './subjectScreen.dart';
+
 class HomeScreen extends StatefulWidget {
   static const routeName = '/HomeScreen';
   const HomeScreen({Key? key}) : super(key: key);
@@ -9,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //demo subject list
+  List demo = ['python', 'coa', 'cs'];
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -22,10 +28,37 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Column(
           children: [
-            Container(
-              height: height * 0.3,
-              width: double.infinity,
-              color: Colors.lightGreenAccent,
+            SubjectDetailsBar(height: height),
+            ListView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.symmetric(vertical: 25),
+              itemBuilder: (ctx, index) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(SubjectScreen.routeName,
+                        arguments: demo[index]);
+                  },
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(
+                          width: 1,
+                        )),
+                    //   tileColor: Colors.black38,
+                    title: Text(
+                      demo[index],
+                    ),
+                    //Percentage
+                    /* trailing: PercentageCircle(
+                      percentage: 70,
+                      outerRadius: 25,
+                      innerRadius: 20,
+                    ), */
+                  ),
+                ),
+              ),
+              itemCount: demo.length,
             )
           ],
         ),

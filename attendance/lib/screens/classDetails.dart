@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../constants.dart';
 import './subject.dart';
 import '../bottomNavBar.dart';
+import '../widgets/percentage.dart';
 
 class ClassDetails extends StatefulWidget {
   static const routeName = '/ClassDetails';
@@ -62,7 +63,7 @@ class _ClassDetailsState extends State<ClassDetails> {
     fullName.dispose();
     totalSubj.dispose();
     noPeriods.dispose();
-   
+
     super.dispose();
   }
 
@@ -162,7 +163,11 @@ class _ClassDetailsState extends State<ClassDetails> {
                   style: Theme.of(context).textTheme.headline3,
                 ),
               ),
-              PercentagePieChart(percentage: percentage),
+              PercentageCircle(
+                percentage: percentage,
+                innerRadius: 40,
+                outerRadius: 50,
+              ),
               Slider(
                 activeColor: const Color(0XFFEB1555),
                 inactiveColor: Colors.grey[350],
@@ -230,34 +235,4 @@ class _ClassDetailsState extends State<ClassDetails> {
           }
         });
       });
-}
-
-class PercentagePieChart extends StatelessWidget {
-  const PercentagePieChart({
-    Key? key,
-    required this.percentage,
-  }) : super(key: key);
-
-  final int percentage;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      // %  chart
-
-      child: CircleAvatar(
-        radius: 55,
-        child: CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 45,
-          child: Text(
-            '$percentage%',
-            style: const TextStyle(
-              fontSize: 25,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

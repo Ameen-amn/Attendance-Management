@@ -1,3 +1,5 @@
+import 'package:attendance/screens/subjectScreen.dart';
+import 'package:attendance/widgets/subjectCard.dart';
 import 'package:flutter/material.dart';
 
 import './screens/login.dart';
@@ -25,16 +27,16 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           primarySwatch: Colors.blue,
           iconTheme: const IconThemeData(
-            
             color: Colors.black,
             size: 24,
           )),
       routes: {
-        '/': (_) => const ClassDetails(),
-        SignUp.routeName: (_) =>  SignUp(),
-        //ClassDetails.routeName: (_) => const ClassDetails(),
+        '/': (_) => const   ClassDetails(), // HomeScreen(),
+        SignUp.routeName: (_) => SignUp(),
+       // ClassDetails.routeName: (_) => const ClassDetails(),
         Subject.routeName: (_) => const Subject(),
-        HomeScreen.routeName: (_) => const HomeScreen(),
+        // HomeScreen.routeName: (_) => const HomeScreen(),
+        SubjectScreen.routeName:(_)=> SubjectScreen(),
       },
     );
   }

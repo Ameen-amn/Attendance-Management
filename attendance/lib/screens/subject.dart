@@ -137,7 +137,7 @@ class _SubjectState extends State<Subject> {
                           userDetails['WorkingDays'].length,
                           (day) => Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            // mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(
@@ -152,17 +152,17 @@ class _SubjectState extends State<Subject> {
                                 ),
                               ),
                               Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: List.generate(
                                   userDetails['NumofPeriods'],
                                   (period) => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
-                                            0, 8, 0, 8),
+                                            0, 12, 0, 8),
                                         child: Text(
-                                          'Period ${period + 1}',
+                                          ' Period ${period + 1}',
                                           style: TextStyle(
                                             fontSize: 14,
                                           ),
@@ -190,7 +190,8 @@ class _SubjectState extends State<Subject> {
                                           items: _controllers
                                               .map<DropdownMenuItem<String>>(
                                                   (subject) =>
-                                                      DropdownMenuItem<String>(
+                                                      DropdownMenuItem<
+                                                              String>(
                                                           value: subject.text,
                                                           child: Text(
                                                               subject.text)))

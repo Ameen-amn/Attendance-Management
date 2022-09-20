@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+part 'userDetails.g.dart';
 
+@HiveType(typeId: 1)
 class UserDetails {
-  /* final String name;
+  @HiveField(0)
+  final String name;
+  @HiveField(1)
   final int totalSubject;
-  final int  */
+  @HiveField(2)
+  final int numOfPeriods;
+  @HiveField(3)
+  final int attendancePercentage;
+  @HiveField(4)
+  final List<String> workingDays;
+  UserDetails({
+    required this.name,
+    required this.totalSubject,
+    required this.numOfPeriods,
+    required this.attendancePercentage,
+    required this.workingDays,
+  });
 }
 
 Map<String, dynamic> _userDetails = {};

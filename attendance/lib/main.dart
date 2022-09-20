@@ -1,3 +1,4 @@
+import 'package:attendance/provider/userDetails.dart';
 import 'package:attendance/screens/subjectScreen.dart';
 import 'package:attendance/widgets/subjectCard.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,14 @@ import './screens/signUp.dart';
 import './screens/subject.dart';
 import './screens/classDetails.dart';
 import './screens/home.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(UserDetailsAdapter().typeId)) {
+    Hive.registerAdapter(UserDetailsAdapter());
+  }
+
   runApp(const MyApp());
 }
 
@@ -31,12 +38,12 @@ class MyApp extends StatelessWidget {
             size: 24,
           )),
       routes: {
-        '/': (_) => const   ClassDetails(), // HomeScreen(),
+        '/': (_) => const ClassDetails(), // HomeScreen(),
         SignUp.routeName: (_) => SignUp(),
-       // ClassDetails.routeName: (_) => const ClassDetails(),
+        // ClassDetails.routeName: (_) => const ClassDetails(),
         Subject.routeName: (_) => const Subject(),
         // HomeScreen.routeName: (_) => const HomeScreen(),
-        SubjectScreen.routeName:(_)=> SubjectScreen(),
+        SubjectScreen.routeName: (_) => SubjectScreen(),
       },
     );
   }

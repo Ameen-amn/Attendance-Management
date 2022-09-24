@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/fluent.dart';
 
-import '../screens/classDetails.dart';
+import 'InitialclassDetails.dart';
 import '../constants.dart';
 
 class SignUp extends StatefulWidget {

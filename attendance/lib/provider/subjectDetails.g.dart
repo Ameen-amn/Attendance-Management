@@ -1,50 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'userDetails.dart';
+part of 'subjectDetails.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class UserDetailsAdapter extends TypeAdapter<UserDetails> {
+class SubjectDetailsAdapter extends TypeAdapter<SubjectDetails> {
   @override
-  final int typeId = 1;
+  final int typeId = 2;
 
   @override
-  UserDetails read(BinaryReader reader) {
+  SubjectDetails read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return UserDetails(
-      name: fields[1] as String,
-      totalSubject: fields[2] as int,
-      numOfPeriods: fields[3] as int,
-      attendancePercentage: fields[4] as int,
-      workingDays: (fields[5] as List).cast<String>(),
-      timeTableAdded: fields[6] as bool,
+    return SubjectDetails(
       id: fields[0] as int?,
+      subjectName: fields[1] as String,
+      totalClassesTaken: fields[2] as int,
+      totalClassesAttended: fields[3] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, UserDetails obj) {
+  void write(BinaryWriter writer, SubjectDetails obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.subjectName)
       ..writeByte(2)
-      ..write(obj.totalSubject)
+      ..write(obj.totalClassesTaken)
       ..writeByte(3)
-      ..write(obj.numOfPeriods)
-      ..writeByte(4)
-      ..write(obj.attendancePercentage)
-      ..writeByte(5)
-      ..write(obj.workingDays)
-      ..writeByte(6)
-      ..write(obj.timeTableAdded);
+      ..write(obj.totalClassesAttended);
   }
 
   @override
@@ -53,7 +44,7 @@ class UserDetailsAdapter extends TypeAdapter<UserDetails> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserDetailsAdapter &&
+      other is SubjectDetailsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

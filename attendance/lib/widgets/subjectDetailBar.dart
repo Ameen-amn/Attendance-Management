@@ -1,3 +1,4 @@
+import 'package:attendance/provider/subjectDetails.dart';
 import 'package:attendance/provider/userDetails.dart';
 import 'package:flutter/material.dart';
 
@@ -14,14 +15,14 @@ class SubjectDetailsBar extends StatefulWidget {
 class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
   late String? today = 'Monday';
   late String? currentSubj = 'Python';
-  final List demoWorkingdays = ['Monday', 'Tuesday'];
+  //final List demoWorkingdays = ['Monday', 'Tuesday'];
   final List demoSubjects = ['Python', 'SS'];
   @override
   Widget build(BuildContext context) {
     return Container(
       height: widget.height * 0.3,
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.lightGreenAccent,
@@ -36,7 +37,7 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                 children: [
                   DropdownButton(
                     items: /* userDetails['WorkingDays'] */
-                        demoWorkingdays
+                        weeks
                             .map<DropdownMenuItem<String>>(
                                 (workingDay) => DropdownMenuItem<String>(
                                       value: workingDay,
@@ -72,7 +73,11 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
               SizedBox(
                   /* height: 100,
                   width: 100, */
-                  child: PercentageCircle(percentage: 70,outerRadius: 35,innerRadius: 30,)),
+                  child: PercentageCircle(
+                percentage: 70,
+                outerRadius: 35,
+                innerRadius: 30,
+              )),
             ],
           ),
           Padding(
@@ -85,7 +90,9 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  retreiveUserDetails();
+                },
                 child: Text(
                   'Present',
                   style: TextStyle(

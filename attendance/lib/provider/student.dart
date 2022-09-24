@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
+//FOR CREATING AUHTENTICATION 
 class Student {
   final String name;
   final String email;
@@ -25,9 +25,4 @@ class StudentFunctions with ChangeNotifier {
     return {..._students};
   }
 
-  void addNewUser(Student student) {
-    if (_students.containsKey(student.email)) {
-      
-    }
-  }
 }

@@ -5,21 +5,27 @@ part 'userDetails.g.dart';
 @HiveType(typeId: 1)
 class UserDetails {
   @HiveField(0)
-  final String name;
+  int? id;
   @HiveField(1)
-  final int totalSubject;
+  final String name;
   @HiveField(2)
-  final int numOfPeriods;
+  final int totalSubject;
   @HiveField(3)
-  final int attendancePercentage;
+  final int numOfPeriods;
   @HiveField(4)
+  final int attendancePercentage;
+  @HiveField(5)
   final List<String> workingDays;
+  @HiveField(6)
+  final bool timeTableAdded;
   UserDetails({
     required this.name,
     required this.totalSubject,
     required this.numOfPeriods,
     required this.attendancePercentage,
     required this.workingDays,
+    required this.timeTableAdded,
+    this.id,
   });
 }
 

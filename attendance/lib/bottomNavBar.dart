@@ -6,7 +6,7 @@ class BottomNavBar extends StatelessWidget {
   final Function action;
   const BottomNavBar({
     required this.name,
-    // required this.routeName,
+    //  required this.routeName,
     required this.action,
   });
 
@@ -16,7 +16,7 @@ class BottomNavBar extends StatelessWidget {
         child: Container(
           width: double.infinity,
           height: 50,
-          decoration: const BoxDecoration(color: Colors.black),
+          decoration: const BoxDecoration(color: Colors.black26),
           child: Center(
             child: Text(
               name,
@@ -26,6 +26,6 @@ class BottomNavBar extends StatelessWidget {
             ),
           ),
         ),
-        onTap:()=> action());
+        onTap: () => action());
   }
 }

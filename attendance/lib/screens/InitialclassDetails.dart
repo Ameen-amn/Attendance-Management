@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../constants.dart';
-import './subject.dart';
+import 'initialsubject.dart';
 import '../bottomNavBar.dart';
 import '../widgets/percentage.dart';
 
@@ -47,18 +47,12 @@ class _ClassDetailsState extends State<ClassDetails> {
   int percentage = 75;
   Future<bool> formSave() async {
     if (_form.currentState!.validate()) {
-      UserDetails _currentUser = UserDetails(
-          name: fullName.text,
-          totalSubject: int.parse(totalSubj.text),
-          numOfPeriods: int.parse(noPeriods.text),
-          attendancePercentage: percentage,
-          workingDays: _workingDays);
-      await classDetails('userDetails', _currentUser);
-      /* await classDetails('FullName', fullName.text);
+      //await classDetails('userDetails', _currentUser);
+      await classDetails('FullName', fullName.text);
       await classDetails('TotalNumofSubjects', int.parse(totalSubj.text));
       await classDetails('NumofPeriods', int.parse(noPeriods.text));
       await classDetails('RequiredPercentage', percentage);
-      await classDetails('WorkingDays', _workingDays); */
+      await classDetails('WorkingDays', _workingDays);
       Navigator.of(context).pushNamed(Subject.routeName);
       // _form.currentState?.save();
     }
@@ -78,9 +72,13 @@ class _ClassDetailsState extends State<ClassDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("User Details"),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 45,
+          horizontal: 30,
+          //vertical: 40,
         ),
         child: Form(
           key: _form,

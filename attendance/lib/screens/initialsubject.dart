@@ -88,18 +88,22 @@ class _SubjectState extends State<Subject> {
         numOfPeriods: userDetails['NumofPeriods'],
         attendancePercentage: userDetails['RequiredPercentage'],
         workingDays: userDetails['WorkingDays'],
+        subjects: _subjectDetailsList,
         timeTableAdded: _switchValue,
+        id: 1,
       );
       await creatingDB(_subjectDetailsList, _currentUser);
       if (_switchValue == true) {
         bool timeTableEnterdCompletey = false;
         //Checking wether all the timetable dropdown contains subjects
         for (int i = 0; i < _timeTableDropDownList.length; i++) {
-          for (int j = 0; j < _timeTableDropDownList.length; j++) {
+          for (int j = 0; j < _timeTableDropDownList[0].length; j++) {
             if (_timeTableDropDownList[i][j] == '') {
+              print('error in dropdown');
               timeTableEnterdCompletey = false;
               break;
             } else {
+              print('helo');
               timeTableEnterdCompletey = true;
             }
           }

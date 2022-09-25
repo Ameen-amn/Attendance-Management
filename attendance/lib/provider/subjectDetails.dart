@@ -31,7 +31,7 @@ Future<void> creatingDB(
   final userDB = await Hive.openBox<UserDetails>('UserDB');
   //optaining the id given by hive and assign it as id of our userDB content
   final _id = await userDB.add(_currentUser);
-  _currentUser.id = _id;
+  //_currentUser.id = _id;
 
   final subjectDB = await Hive.openBox<SubjectDetails>('SubjectDB');
   //Accepting a list of subjectDetails and adding them to subjectDB based on
@@ -43,10 +43,14 @@ Future<void> creatingDB(
 }
 
 List<String> weeks = [];
+List<SubjectDetails> subjects = [];
 Future<void> retreiveUserDetails() async {
   final getUserDetails = await Hive.openBox<UserDetails>("UserDB");
   // print(getUserDetails.values.first.);
+
+  print('details:${getUserDetails.values}');
   weeks = getUserDetails.values.first.workingDays;
-  print(weeks);
+  subjects = getUserDetails.values.first.subjects;
+  print(subjects);
   //  week.addAll(getUserDetails.values[]);
 }

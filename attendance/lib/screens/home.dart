@@ -1,3 +1,4 @@
+import 'package:attendance/provider/subjectDetails.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/subjectDetailBar.dart';
@@ -13,6 +14,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    retreiveUserDetails();
+    super.initState();
+  }
+
   //demo subject list
   List demo = ['python', 'coa', 'cs'];
   @override
@@ -26,9 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
           horizontal: 20,
           vertical: 10,
         ),
-        child: Column(
+        child: ListView(
           children: [
-            SubjectDetailsBar(height: height),
+            SubjectDetailsBar(),
             ListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(vertical: 25),

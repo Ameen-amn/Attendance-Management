@@ -24,14 +24,24 @@ Future<void> main() async {
   if (!Hive.isAdapterRegistered(TimeTableAdapter().typeId)) {
     Hive.registerAdapter(TimeTableAdapter());
   }
-
-  runApp(const MyApp());
+  final user = await Hive.openBox<UserDetails>('UserDB');
+  bool? _dataNotPresent = user.isEmpty;
+  runApp( MyApp(
+    checkingDataAvailable: _dataNotPresent,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final bool? checkingDataAvailable;
+  const MyApp({Key? key, this.checkingDataAvailable,}
+
+  ) : super(key: key);
+
+  
+
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -47,9 +57,43 @@ class MyApp extends StatelessWidget {
             size: 24,
           )),
       routes: {
-        '/': (_) => !Hive.isAdapterRegistered(UserDetailsAdapter().typeId)
-            ? const ClassDetails()
-            : const HomeScreen(),
+        '/': (_) {
+          /* Future<int> check() async {
+            final details = await Hive.openBox<UserDetails>('UserDB')
+                .then((value) => value.values.length);
+            return details;
+          }
+
+          check().then((value) {
+            if (value < 1) {
+              dataInserted = false;
+            } else {
+              dataInserted = true;
+            }
+          }); */
+          /* bool dataInserted = false;
+
+          Hive.openBox<UserDetails>('UserDB')
+              .then((userValues) => userValues.values.isEmpty)
+              .then((value) {
+            print('thid is vl${value}');
+            dataInserted = value;
+            //value ? const ClassDetails() : const HomeScreen();
+          }); */
+          // return ClassDetails();
+          
+          
+
+          if (checkingDataAvailable==true) {
+            
+            return const ClassDetails();
+          } else {
+            
+            return const HomeScreen();
+          }
+          
+        },
+
         SignUp.routeName: (_) => SignUp(),
         // ClassDetails.routeName: (_) => const ClassDetails(),
         Subject.routeName: (_) => const Subject(),

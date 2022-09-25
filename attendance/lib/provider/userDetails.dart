@@ -1,3 +1,4 @@
+import 'package:attendance/provider/subjectDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 part 'userDetails.g.dart';
@@ -17,7 +18,10 @@ class UserDetails {
   @HiveField(5)
   final List<String> workingDays;
   @HiveField(6)
+  final List<SubjectDetails> subjects;
+  @HiveField(7)
   final bool timeTableAdded;
+
   UserDetails({
     required this.name,
     required this.totalSubject,
@@ -25,6 +29,7 @@ class UserDetails {
     required this.attendancePercentage,
     required this.workingDays,
     required this.timeTableAdded,
+    required this.subjects,
     this.id,
   });
 }

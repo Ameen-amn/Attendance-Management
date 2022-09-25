@@ -22,7 +22,8 @@ class UserDetailsAdapter extends TypeAdapter<UserDetails> {
       numOfPeriods: fields[3] as int,
       attendancePercentage: fields[4] as int,
       workingDays: (fields[5] as List).cast<String>(),
-      timeTableAdded: fields[6] as bool,
+      timeTableAdded: fields[7] as bool,
+      subjects: (fields[6] as List).cast<SubjectDetails>(),
       id: fields[0] as int?,
     );
   }
@@ -30,7 +31,7 @@ class UserDetailsAdapter extends TypeAdapter<UserDetails> {
   @override
   void write(BinaryWriter writer, UserDetails obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,6 +45,8 @@ class UserDetailsAdapter extends TypeAdapter<UserDetails> {
       ..writeByte(5)
       ..write(obj.workingDays)
       ..writeByte(6)
+      ..write(obj.subjects)
+      ..writeByte(7)
       ..write(obj.timeTableAdded);
   }
 

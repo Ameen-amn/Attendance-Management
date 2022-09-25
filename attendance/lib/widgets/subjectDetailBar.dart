@@ -1,26 +1,30 @@
 import 'package:attendance/provider/subjectDetails.dart';
 import 'package:attendance/provider/userDetails.dart';
+import 'package:attendance/screens/initialsubject.dart';
 import 'package:flutter/material.dart';
 
 import './percentage.dart';
 
 class SubjectDetailsBar extends StatefulWidget {
-  const SubjectDetailsBar({Key? key, required this.height}) : super(key: key);
-  final double height;
+  const SubjectDetailsBar({
+    Key? key,
+    // required this.height,
+  }) : super(key: key);
+  // final double height;
 
   @override
   State<SubjectDetailsBar> createState() => _SubjectDetailsBarState();
 }
 
 class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
-  late String? today = 'Monday';
-  late String? currentSubj = 'Python';
+  late String? today = weeks[0];
+  late String? currentSubj = 'SS';
   //final List demoWorkingdays = ['Monday', 'Tuesday'];
   final List demoSubjects = ['Python', 'SS'];
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: widget.height * 0.3,
+      height: MediaQuery.of(context).size.height * 0.3,
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       decoration: BoxDecoration(
@@ -70,7 +74,7 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                 ],
               ),
               //Percentage Circle
-              SizedBox(
+              const SizedBox(
                   /* height: 100,
                   width: 100, */
                   child: PercentageCircle(
@@ -80,7 +84,7 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
               )),
             ],
           ),
-          Padding(
+          const Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 8,
             ),

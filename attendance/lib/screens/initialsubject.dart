@@ -71,16 +71,21 @@ class _SubjectState extends State<Subject> {
     if (_controllers.length == userDetails['TotalNumofSubjects'] ||
         _controllers.isNotEmpty) {
       print('TextField is complete');
-      _controllers.map((choosenSubject) => {
-            //adding to subject details and subject
-            _subjectDetailsList.add(
-              SubjectDetails(
-                subjectName: choosenSubject.text,
-                totalClassesTaken: 0,
-                totalClassesAttended: 0,
-              ),
-            ),
-          });
+      _controllers.map((choosenSubject) {
+        print('sug${choosenSubject.text}');
+        //adding to subject details and subject
+        _subjectDetailsList.add(SubjectDetails(
+          subjectName: choosenSubject.text,
+          totalClassesTaken: 0,
+          totalClassesAttended: 0,
+        ));
+      }).toList();
+      // print(_subjectDetailsList.first.subjectName);
+      List<String> _selectedSubject = [];
+
+      _controllers
+          .map((_subject) => _selectedSubject.add(_subject.text))
+          .toList();
 
       UserDetails _currentUser = UserDetails(
         name: userDetails['FullName'],
@@ -88,12 +93,12 @@ class _SubjectState extends State<Subject> {
         numOfPeriods: userDetails['NumofPeriods'],
         attendancePercentage: userDetails['RequiredPercentage'],
         workingDays: userDetails['WorkingDays'],
-        subjects: _subjectDetailsList,
+        subjects: _selectedSubject,
         timeTableAdded: _switchValue,
         id: 1,
       );
-      await creatingDB(_subjectDetailsList, _currentUser);
-      if (_switchValue == true) {
+      await creatingDB(_subjectDetailsList, _currentUser).then((_) {
+        if (_switchValue == true) {
         bool timeTableEnterdCompletey = false;
         //Checking wether all the timetable dropdown contains subjects
         for (int i = 0; i < _timeTableDropDownList.length; i++) {
@@ -110,17 +115,21 @@ class _SubjectState extends State<Subject> {
         }
         if (timeTableEnterdCompletey == true) {
           //Adding Data to timetableDB
-          await timeTableDB(userDetails['WorkingDays'], _timeTableDropDownList);
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              HomeScreen.routeName, (Route<dynamic> route) => false);
+           timeTableDB(userDetails['WorkingDays'], _timeTableDropDownList)
+              .then((_) => Navigator.of(context).pushNamedAndRemoveUntil(
+                  HomeScreen.routeName, (Route<dynamic> route) => false));
         }
       }
       if (_switchValue == false) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
+         Navigator.of(context).pushNamedAndRemoveUntil(
             HomeScreen.routeName, (Route<dynamic> route) => false);
       }
+        
+      });
+
+      // await subjectDBCreation(_controllers)
+      
     }
-    retreiveUserDetails();
   }
 
   //dropdown  initail value

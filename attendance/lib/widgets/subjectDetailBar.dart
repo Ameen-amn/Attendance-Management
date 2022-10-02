@@ -2,6 +2,7 @@ import 'package:attendance/provider/subjectDetails.dart';
 import 'package:attendance/provider/userDetails.dart';
 import 'package:attendance/screens/initialsubject.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import './percentage.dart';
 
@@ -17,8 +18,8 @@ class SubjectDetailsBar extends StatefulWidget {
 }
 
 class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
-  late String? today = weeks[0];
-  late String? currentSubj = 'SS';
+  late String? today = weeks[0] /* 'Monday' */;
+  late String? currentSubj = subjects[0];
   //final List demoWorkingdays = ['Monday', 'Tuesday'];
   final List demoSubjects = ['Python', 'SS'];
   @override
@@ -57,7 +58,7 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                   ),
                   DropdownButton(
                     items: /* userDetails['subjects'] */
-                        demoSubjects
+                        subjects
                             .map<DropdownMenuItem<String>>(
                                 (subject) => DropdownMenuItem<String>(
                                       value: subject,
@@ -78,10 +79,11 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                   /* height: 100,
                   width: 100, */
                   child: PercentageCircle(
-                percentage: 70,
-                outerRadius: 35,
-                innerRadius: 30,
-              )),
+                progressRadius: 40,
+                percentage: 0.7,
+                kfontSize: 18,lineWidth: 8,
+              )
+              ,),
             ],
           ),
           const Padding(
@@ -94,10 +96,18 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  retreiveUserDetails();
+                onPressed: () async {
+                  final _updateSub =
+                      await Hive.openBox<SubjectDetails>('SubjectDB').then(
+                          (subjects) => subjects.values.firstWhere(
+                              (selectSubj) =>
+                                  selectSubj.subjectName == currentSubj));
+
+                  setState(() {
+                    present(_updateSub);
+                  });
                 },
-                child: Text(
+                child: const Text(
                   'Present',
                   style: TextStyle(
                     fontSize: 14,
@@ -111,8 +121,17 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
-                child: Text(
+                onPressed: () async {
+                  final _updateSub =
+                      await Hive.openBox<SubjectDetails>('SubjectDB').then(
+                          (value) => value.values.firstWhere(
+                              (element) => element.subjectName == currentSubj));
+                  print('wekkk${_updateSub.id}');
+                  setState(() {
+                    abscent(_updateSub);
+                  });
+                },
+                child: const Text(
                   'Abscent',
                   style: TextStyle(
                     fontSize: 14,
@@ -121,7 +140,8 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.red,
                   elevation: 1,
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: StadiumBorder(),
                 ),
               )

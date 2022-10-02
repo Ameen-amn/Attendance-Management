@@ -169,9 +169,12 @@ class _ClassDetailsState extends State<ClassDetails> {
                 ),
               ),
               PercentageCircle(
-                percentage: percentage,
-                innerRadius: 40,
-                outerRadius: 50,
+                percentage: percentage.toDouble()/100,
+                progressRadius: 40,
+                kfontSize: 22,
+                lineWidth: 8,
+                
+                //textPercentage: percentage.toString(),
               ),
               Slider(
                 activeColor: const Color(0XFFEB1555),

@@ -1,3 +1,4 @@
+import 'package:attendance/provider/subjectDetails.dart';
 import 'package:flutter/material.dart';
 import '../widgets/subjectCard.dart';
 
@@ -8,7 +9,16 @@ class SubjectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final subject = ModalRoute.of(context)!.settings.arguments;
+    final subjectD =
+        ModalRoute.of(context)!.settings.arguments as SubjectDetails;
+    int percentage = 0;
+    if (subjectD.totalClassesTaken != 0) {
+      percentage =
+          ((subjectD.totalClassesAttended / subjectD.totalClassesTaken) * 100)
+              .floor();
+    } else {
+      percentage = 100;
+    }
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -19,11 +29,10 @@ class SubjectScreen extends StatelessWidget {
         child: Column(
           //  mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(subject.toString()),
-            SubjectCard(),
+            Text(subjectD.subjectName),
+            SubjectCard(percentage: percentage.toDouble() / 100),
             Text("Total Number of Periods"),
             TextField(
-              
               enabled: false,
               controller: totalPeriods,
             )

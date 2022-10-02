@@ -23,7 +23,7 @@ class UserDetailsAdapter extends TypeAdapter<UserDetails> {
       attendancePercentage: fields[4] as int,
       workingDays: (fields[5] as List).cast<String>(),
       timeTableAdded: fields[7] as bool,
-      subjects: (fields[6] as List).cast<SubjectDetails>(),
+      subjects: (fields[6] as List).cast<String>(),
       id: fields[0] as int?,
     );
   }

@@ -18,7 +18,7 @@ class UserDetails {
   @HiveField(5)
   final List<String> workingDays;
   @HiveField(6)
-  final List<SubjectDetails> subjects;
+  final List<String> subjects;
   @HiveField(7)
   final bool timeTableAdded;
 

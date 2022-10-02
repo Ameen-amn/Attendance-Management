@@ -3,7 +3,9 @@ import './percentage.dart';
 
 /*CARD IS USED TO DISPLAY INSIDE A SUBJECT */
 class SubjectCard extends StatelessWidget {
+  final double percentage;
   const SubjectCard({
+    required this.percentage,
     Key? key,
     //required this.subjName,
   }) : super(key: key);
@@ -11,6 +13,7 @@ class SubjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.black26,
         borderRadius: BorderRadius.circular(16),
@@ -18,9 +21,15 @@ class SubjectCard extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.25,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
+        children:  [
           Text('Attendance Report'),
-          PercentageCircle(percentage: 60, outerRadius: 50, innerRadius: 40),
+          PercentageCircle(
+            percentage: percentage,
+            progressRadius: 50,
+            //  textPercentage: 60.toString(),
+            kfontSize: 18,
+            lineWidth: 8,
+          ),
           Text("Number of Class short with"),
         ],
       ),

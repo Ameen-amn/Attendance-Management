@@ -1,8 +1,9 @@
 import 'package:attendance/provider/subjectDetails.dart';
+import 'package:attendance/widgets/homeTile.dart';
+import 'package:attendance/widgets/percentage.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/subjectDetailBar.dart';
-import '../widgets/percentage.dart';
 import './subjectScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,14 +18,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     retreiveUserDetails();
+    print('lst ${classAttended.value}');
+    // TODO: implement initState
     super.initState();
   }
 
   //demo subject list
-  List demo = ['python', 'coa', 'cs'];
+
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    // double height = MediaQuery.of(context).size.height;
 
     return SafeArea(
         child: Scaffold(
@@ -44,28 +47,47 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.of(context).pushNamed(SubjectScreen.routeName,
-                        arguments: demo[index]);
+                        arguments: SubjectDetails(
+                          subjectName: subjects[index],
+                          totalClassesTaken: classAttended.value[index]![1],
+                          totalClassesAttended: classAttended.value[index]![0],
+                        ));
                   },
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(
-                          width: 1,
-                        )),
-                    //   tileColor: Colors.black38,
-                    title: Text(
-                      demo[index],
+                  child: HomeTile(
+                      tileHead: subjects[index],
+                      clss: classAttended,
+                      itemIndex: index),
+                  /* ListTile(
+                    title: Text(subjects[index]),
+                    trailing: SizedBox(
+                      width: 100,
+                      child: ValueListenableBuilder(
+                          valueListenable: classAttended,
+                          builder: (BuildContext ctx,
+                              Map<int?, List<int>> classAttend, Widget? _) {
+                            int percentage = 100;
+                            //  subject=classAttend.keys.firstWhere((element) => subjectD,)
+                            if (classAttend[index]![1] != 0) {
+                              if (classAttend[index] != null) {
+                                percentage = ((classAttend[index]![0] /
+                                            classAttend[index]![1]) *
+                                        100)
+                                    .floor();
+                              }
+                            }
+
+                            return PercentageCircle(
+                              percentage: percentage / 100,
+                              progressRadius: 25,
+                              kfontSize: 14,
+                              lineWidth: 5,
+                            );
+                          }),
                     ),
-                    //Percentage
-                    /* trailing: PercentageCircle(
-                      percentage: 70,
-                      outerRadius: 25,
-                      innerRadius: 20,
-                    ), */
-                  ),
+                  ), */
                 ),
               ),
-              itemCount: demo.length,
+              itemCount: subjects.length,
             )
           ],
         ),

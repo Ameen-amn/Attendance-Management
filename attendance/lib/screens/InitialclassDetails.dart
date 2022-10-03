@@ -77,6 +77,7 @@ class _ClassDetailsState extends State<ClassDetails> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
+          vertical: 20,
           horizontal: 30,
           //vertical: 40,
         ),
@@ -168,13 +169,16 @@ class _ClassDetailsState extends State<ClassDetails> {
                   style: Theme.of(context).textTheme.headline3,
                 ),
               ),
-              PercentageCircle(
-                percentage: percentage.toDouble()/100,
-                progressRadius: 40,
-                kfontSize: 22,
-                lineWidth: 8,
-                
-                //textPercentage: percentage.toString(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                child: PercentageCircle(
+                  percentage: percentage.toDouble() / 100,
+                  progressRadius: 50,
+                  kfontSize: 24,
+                  lineWidth: 10,
+                  animation: false,
+                  //textPercentage: percentage.toString(),
+                ),
               ),
               Slider(
                 activeColor: const Color(0XFFEB1555),

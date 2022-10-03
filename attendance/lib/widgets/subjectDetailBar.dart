@@ -18,8 +18,9 @@ class SubjectDetailsBar extends StatefulWidget {
 }
 
 class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
+  int globalSubIndex = 0;
   late String? today = weeks[0] /* 'Monday' */;
-  late String? currentSubj = subjects[0];
+  late String? currentSubj = subjects[globalSubIndex];
   //final List demoWorkingdays = ['Monday', 'Tuesday'];
   final List demoSubjects = ['Python', 'SS'];
   @override
@@ -67,6 +68,7 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                             .toList(),
                     onChanged: (nowSubj) {
                       setState(() {
+                        globalSubIndex = subjects.indexOf(nowSubj.toString());
                         currentSubj = nowSubj.toString();
                       });
                     },
@@ -75,15 +77,32 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                 ],
               ),
               //Percentage Circle
-              const SizedBox(
-                  /* height: 100,
-                  width: 100, */
-                  child: PercentageCircle(
-                progressRadius: 40,
-                percentage: 0.7,
-                kfontSize: 18,lineWidth: 8,
-              )
-              ,),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                child: ValueListenableBuilder(
+                    valueListenable: classAttended,
+                    builder: (BuildContext ctx,
+                        Map<int?, List<int>> classAttend, Widget? _) {
+                      int percentage = 0;
+                      //  subject=classAttend.keys.firstWhere((element) => subjectD,)
+                      if (classAttend[globalSubIndex]![1] != 0) {
+                        if (classAttend[globalSubIndex] != null) {
+                          percentage = ((classAttend[globalSubIndex]![0] /
+                                      classAttend[globalSubIndex]![1]) *
+                                  100)
+                              .floor();
+                        }
+                      }
+
+                      return PercentageCircle(
+                        percentage: percentage / 100,
+                        progressRadius: 40,
+                        kfontSize: 22,
+                        lineWidth: 8,
+                        animation: true,
+                      );
+                    }),
+              ),
             ],
           ),
           const Padding(
@@ -104,6 +123,14 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                                   selectSubj.subjectName == currentSubj));
 
                   setState(() {
+                    //updating dropdown and %chart automaticaly
+                    /*  if (globalSubIndex < subjects.length - 1) {
+                      globalSubIndex++;
+                      currentSubj = subjects[globalSubIndex];
+                    } else {
+                      globalSubIndex = 0;
+                      currentSubj = subjects[globalSubIndex];
+                    } */
                     present(_updateSub);
                   });
                 },

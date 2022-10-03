@@ -2,35 +2,49 @@ import 'package:flutter/material.dart';
 import './percentage.dart';
 
 /*CARD IS USED TO DISPLAY INSIDE A SUBJECT */
-class SubjectCard extends StatelessWidget {
+class SubjectCard extends StatefulWidget {
   final double percentage;
   const SubjectCard({
     required this.percentage,
     Key? key,
     //required this.subjName,
   }) : super(key: key);
+
+  @override
+  State<SubjectCard> createState() => _SubjectCardState();
+}
+
+class _SubjectCardState extends State<SubjectCard> {
   //final String subjName;
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
+        border: Border.all(width: 1, color: Colors.black87),
         color: Colors.black26,
         borderRadius: BorderRadius.circular(16),
       ),
       height: MediaQuery.of(context).size.height * 0.25,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children:  [
-          Text('Attendance Report'),
-          PercentageCircle(
-            percentage: percentage,
-            progressRadius: 50,
-            //  textPercentage: 60.toString(),
-            kfontSize: 18,
-            lineWidth: 8,
+        //mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 24, 0, 12),
+            child: PercentageCircle(
+              percentage: widget.percentage,
+              progressRadius: 50,
+              //  textPercentage: 60.toString(),
+              kfontSize: 24,
+              lineWidth: 10,
+              animation: true,
+            ),
           ),
-          Text("Number of Class short with"),
+          const Padding(
+            padding: const EdgeInsets.fromLTRB(0, 12, 0, 18),
+            child: Text("Number of Class short with"),
+          ),
         ],
       ),
     );

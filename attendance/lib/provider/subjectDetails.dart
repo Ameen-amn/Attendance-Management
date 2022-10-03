@@ -1,3 +1,4 @@
+import 'package:attendance/screens/initialsubject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import './userDetails.dart';
@@ -127,6 +128,25 @@ Future<void> abscent(SubjectDetails seleSub) async {
   } else {
     print('updation FAiled :${_updatedSubj.id}');
   }
+  retreiveUserDetails();
+  classAttended.notifyListeners();
+}
+
+Future<void> updateTotalClassess(
+    int? key, int totalClass, int presentClasses) async {
+  print('key$key');
+  final _openSub = await Hive.openBox<SubjectDetails>('SubjectDB');
+  final _selectSubj = _openSub.values.firstWhere((_subj) => _subj.id == key);
+  SubjectDetails _updateSubj = SubjectDetails(
+      id: _selectSubj.id,
+      subjectName: _selectSubj.subjectName,
+      totalClassesTaken: totalClass,
+      totalClassesAttended: presentClasses);
+  print('clss$_selectSubj');
+  if (_updateSubj.id != null) {
+    _openSub.putAt(_updateSubj.id!, _updateSubj);
+  }
+  final sub = _openSub.values.firstWhere((subj) => subj.id == _selectSubj.id);
   retreiveUserDetails();
   classAttended.notifyListeners();
 }

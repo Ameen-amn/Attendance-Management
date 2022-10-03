@@ -2,6 +2,7 @@ import 'package:attendance/provider/subjectDetails.dart';
 import 'package:attendance/widgets/homeTile.dart';
 import 'package:attendance/widgets/percentage.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import '../widgets/subjectDetailBar.dart';
 import './subjectScreen.dart';
@@ -45,9 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (ctx, index) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    final _subjectsDetails =
+                        await Hive.openBox<SubjectDetails>("SubjectDB");
+                    final SubjectDetails passSubj = _subjectsDetails.values.firstWhere(
+                        (_subjectD) =>
+                            _subjectD.subjectName == subjects[index]);
                     Navigator.of(context).pushNamed(SubjectScreen.routeName,
                         arguments: SubjectDetails(
+                          id: passSubj.id,
                           subjectName: subjects[index],
                           totalClassesTaken: classAttended.value[index]![1],
                           totalClassesAttended: classAttended.value[index]![0],

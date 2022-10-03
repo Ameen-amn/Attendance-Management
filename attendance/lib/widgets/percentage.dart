@@ -8,12 +8,14 @@ class PercentageCircle extends StatelessWidget {
     required this.progressRadius,
     required this.kfontSize,
     required this.lineWidth,
+    required this.animation,
   }) : super(key: key);
 
   final double percentage;
   final double progressRadius;
   final double lineWidth;
   final double kfontSize;
+  final bool animation;
   @override
   Widget build(BuildContext context) {
     return CircularPercentIndicator(
@@ -27,9 +29,8 @@ class PercentageCircle extends StatelessWidget {
       ),
       progressColor: Colors.green,
       lineWidth: lineWidth,
-      animation: true,
+      animation: animation,
       circularStrokeCap: CircularStrokeCap.round,
     );
-    
   }
 }

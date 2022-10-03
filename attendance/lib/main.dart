@@ -26,23 +26,22 @@ Future<void> main() async {
   }
   final user = await Hive.openBox<UserDetails>('UserDB');
   bool? _dataNotPresent = user.isEmpty;
-  runApp( MyApp(
+  runApp(MyApp(
     checkingDataAvailable: _dataNotPresent,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final bool? checkingDataAvailable;
-  const MyApp({Key? key, this.checkingDataAvailable,}
-
-  ) : super(key: key);
-
-  
+  const MyApp({
+    Key? key,
+    this.checkingDataAvailable,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
           textTheme: const TextTheme(
@@ -51,47 +50,18 @@ class MyApp extends StatelessWidget {
             fontSize: 14,
           )),
           scaffoldBackgroundColor: Colors.white,
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.blueGrey,
           iconTheme: const IconThemeData(
             color: Colors.black,
             size: 24,
           )),
       routes: {
         '/': (_) {
-          /* Future<int> check() async {
-            final details = await Hive.openBox<UserDetails>('UserDB')
-                .then((value) => value.values.length);
-            return details;
-          }
-
-          check().then((value) {
-            if (value < 1) {
-              dataInserted = false;
-            } else {
-              dataInserted = true;
-            }
-          }); */
-          /* bool dataInserted = false;
-
-          Hive.openBox<UserDetails>('UserDB')
-              .then((userValues) => userValues.values.isEmpty)
-              .then((value) {
-            print('thid is vl${value}');
-            dataInserted = value;
-            //value ? const ClassDetails() : const HomeScreen();
-          }); */
-          // return ClassDetails();
-          
-          
-
-          if (checkingDataAvailable==true) {
-            
+          if (checkingDataAvailable == true) {
             return const ClassDetails();
           } else {
-            
             return const HomeScreen();
           }
-          
         },
 
         SignUp.routeName: (_) => SignUp(),

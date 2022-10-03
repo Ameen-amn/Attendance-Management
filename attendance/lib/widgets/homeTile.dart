@@ -54,6 +54,7 @@ class HomeTile extends StatelessWidget {
                     progressRadius: 25,
                     kfontSize: 14,
                     lineWidth: 5,
+                    animation: true,
                   );
                 }),
           ),

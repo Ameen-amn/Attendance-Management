@@ -22,7 +22,7 @@ class PercentageCircle extends StatelessWidget {
       radius: progressRadius,
       percent: percentage,
       center: Text(
-        ((percentage * 100) ~/ 1).toString(),
+        ((percentage * 100) ~/ 1).toString() + '%',
         style: TextStyle(
           fontSize: kfontSize,
         ),

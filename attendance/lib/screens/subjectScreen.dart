@@ -16,18 +16,21 @@ class SubjectScreen extends StatefulWidget {
 
 class _SubjectScreenState extends State<SubjectScreen> {
   late SubjectDetails subjectD;
-  @override
+
   TextEditingController totalPeriods = TextEditingController();
 
   TextEditingController attendedPeriods = TextEditingController();
   int percentage = 0;
+  @override
   void didChangeDependencies() {
     subjectD = ModalRoute.of(context)!.settings.arguments as SubjectDetails;
     testfun();
-    if (subjectD.totalClassesTaken != 0) {
-      percentage =
-          ((subjectD.totalClassesAttended / subjectD.totalClassesTaken) * 100)
-              .floor();
+
+    if (int.parse(totalPeriods.value.text) != 0) {
+      percentage = ((int.parse(attendedPeriods.value.text) /
+                  int.parse(totalPeriods.value.text)) *
+              100)
+          .floor();
     } else {
       percentage = 100;
     }
@@ -35,37 +38,44 @@ class _SubjectScreenState extends State<SubjectScreen> {
     super.didChangeDependencies();
   }
 
-  int test = 0;
-  int testfun() {
-    test = subjectD.totalClassesAttended;
+  void testfun() {
     totalPeriods.text = subjectD.totalClassesTaken.toString();
     attendedPeriods.text = subjectD.totalClassesAttended.toString();
-    return test;
   }
 
   bool _edit = false;
+  String _totalNumofPeriodshistory = '';
+  String _noOfPeriodsattendedhistory = '';
 
   @override
   Widget build(BuildContext context) {
-    /*  if (edit == false) {
-      totalPeriods.text = subjectD.totalClassesTaken.toString();
-      attendedPeriods.text = subjectD.totalClassesAttended.toString();
-    } */
     late int _totalPeriods = int.parse(totalPeriods.text);
     late int _attendPeriods = int.parse(attendedPeriods.text);
+    bool chek;
     Future<void> validate() async {
       if (_totalPeriods >= _attendPeriods) {
+        if (int.parse(totalPeriods.value.text) != 0) {
+          percentage = ((int.parse(attendedPeriods.value.text) /
+                      int.parse(totalPeriods.value.text)) *
+                  100)
+              .floor();
+        } else {
+          percentage = 100;
+        }
+        print('%%% $percentage');
         print('tot${_totalPeriods}');
         print('attper${_attendPeriods}');
         if (subjectD.id != null) {
           updateTotalClassess(subjectD.id, _totalPeriods, _attendPeriods);
+          setState(() {
+            _edit = !_edit;
+          });
+         
         } else {
           print(subjectD.id);
         }
-        setState(() {
-          _edit = !_edit;
-        });
       }
+    
     }
 
     return Scaffold(
@@ -75,9 +85,16 @@ class _SubjectScreenState extends State<SubjectScreen> {
           IconButton(
               onPressed: () {
                 setState(() {
+                  if (_edit == true) {
+                    print('restore value');
+                    totalPeriods.text = _totalNumofPeriodshistory;
+                    attendedPeriods.text = _noOfPeriodsattendedhistory;
+                    print('restored ${totalPeriods.text}');
+                  } else {
+                    _totalNumofPeriodshistory = totalPeriods.text;
+                    _noOfPeriodsattendedhistory = attendedPeriods.text;
+                  }
                   _edit = !_edit;
-                  percentage;
-                  print(_edit);
                 });
               },
               icon: Icon(_edit ? Icons.close_rounded : Icons.edit_rounded)),
@@ -96,14 +113,18 @@ class _SubjectScreenState extends State<SubjectScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             //  mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 4),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 4),
                 child: Text(
-                  ' Attendance Status',
-                  style: TextStyle(
-                    fontSize: 14,
+                  subjectD.subjectName,
+                  style: const TextStyle(
+                    fontSize: 24,
                   ),
                 ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: Text(' Attendance Status'),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 12, 0, 26),
@@ -131,9 +152,9 @@ class _SubjectScreenState extends State<SubjectScreen> {
                       borderRadius: BorderRadius.circular(16),
                     )),
                 controller: attendedPeriods,
-                onChanged: (String newAttendedPeriods) {
+                /* onChanged: (String newAttendedPeriods) {
                   attendedPeriods.text = newAttendedPeriods;
-                },
+                }, */
               ),
               const Padding(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
@@ -161,14 +182,16 @@ class _SubjectScreenState extends State<SubjectScreen> {
                 enabled: _edit,
                 controller: totalPeriods,
                 onEditingComplete: validate,
-                onChanged: (String newtotalPeriods) {
+                /* onChanged: (String newtotalPeriods) {
                   totalPeriods.text = newtotalPeriods;
-                },
+                }, */
               ),
             ],
           ),
         ),
       ),
     );
+    
   }
+    
 }

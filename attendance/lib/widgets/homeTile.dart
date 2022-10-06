@@ -17,7 +17,18 @@ class HomeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.black54),
+          color: Colors.white,
+          border: Border.all(
+
+              //  color: Colors.black54
+              ),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black12,
+                blurRadius: 1,
+                offset: Offset(2, 2),
+                blurStyle: BlurStyle.solid)
+          ],
           borderRadius: BorderRadius.circular(16)),
       height: 70,
       child: Row(

@@ -51,12 +51,18 @@ Future<void> creatingDB(
 List<String> weeks = [];
 List<String> subjects = [];
 ValueNotifier<Map<int?, List<int>>> classAttended = ValueNotifier({});
+List<String> userInfo = [];
 //Fetching Informations from DB
 Future<void> retreiveUserDetails() async {
   //weeks.clear();
   subjects.clear();
   classAttended.value.clear();
   final getUserDetails = await Hive.openBox<UserDetails>("UserDB");
+  //Collecting user Information to userInfo, it is passed to userInfo Screen
+  userInfo.add(getUserDetails.values.first.name);
+  userInfo.add(getUserDetails.values.first.totalSubject.toString());
+  userInfo.add(getUserDetails.values.first.attendancePercentage.toString());
+
   weeks = getUserDetails.values.first.workingDays;
   final _subjectsDetails = await Hive.openBox<SubjectDetails>("SubjectDB");
   // print(getUserDetails.values.first.);
@@ -71,23 +77,9 @@ Future<void> retreiveUserDetails() async {
     print('calss Ateed${classAttended.value.values}');
   }).toList();
   //  week.addAll(getUserDetails.values[]);
-
+  classAttended.notifyListeners();
   print('id is${_subjectsDetails.values.first.id}');
 }
-
-/* Future<void> subjectDBCreation(List<SubjectDetails> _subjectDetails) async {
-  final subjectDB = await Hive.openBox<SubjectDetails>('SubjectDB');
-  _subjectDetails.map((subjectDetail) async {
-    final _subjId = await subjectDB.add(subjectDetail);
-    subjectDetail.id = _subjId;
-  });
-}
-
-Future<void> retreiveSubjectDetails() async {
-  final subjectss = await Hive.openBox<SubjectDetails>("SubjectDB");
-  final id = subjectss.values.first.subjectName;
-  print('sunn$id');
-} */
 
 Future<void> present(SubjectDetails seleSub) async {
   final present = await Hive.openBox<SubjectDetails>('SubjectDB');
@@ -149,4 +141,34 @@ Future<void> updateTotalClassess(
   final sub = _openSub.values.firstWhere((subj) => subj.id == _selectSubj.id);
   retreiveUserDetails();
   classAttended.notifyListeners();
+}
+
+/*Updaing User Details in UserDB*/
+Future<void> updateUserDetails(
+    String updatedUserName, int updatedPercentage) async {
+  final _openUserDB = await Hive.openBox<UserDetails>("UserDB");
+  final _existingUser = _openUserDB.values.first;
+  UserDetails _updateUser = UserDetails(
+      id: _existingUser.id,
+      name: updatedUserName,
+      totalSubject: _existingUser.totalSubject,
+      numOfPeriods: _existingUser.numOfPeriods,
+      attendancePercentage: updatedPercentage,
+      workingDays: _existingUser.workingDays,
+      timeTableAdded: _existingUser.timeTableAdded,
+      subjects: _existingUser.subjects);
+  _openUserDB.putAt(_updateUser.id!, _updateUser);
+  retreiveUserDetails();
+}
+
+Future<void> addNewSubject(
+    String newSubjecName, int newNoofClassPresent, int newTotalClass) async {
+  final _openSubject = await Hive.openBox<SubjectDetails>('SubjectDB');
+  SubjectDetails _newSubject = SubjectDetails(
+      subjectName: newSubjecName,
+      totalClassesTaken: newTotalClass,
+      totalClassesAttended: newNoofClassPresent);
+  final _newSubjID = await _openSubject.add(_newSubject);
+  _newSubject.id = _newSubjID;
+  retreiveUserDetails();
 }

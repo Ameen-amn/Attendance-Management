@@ -1,6 +1,7 @@
 import 'package:attendance/provider/subjectDetails.dart';
 import 'package:attendance/provider/timeTable.dart';
 import 'package:attendance/provider/userDetails.dart';
+import 'package:attendance/screens/addingNewSub.dart';
 import 'package:attendance/screens/subjectScreen.dart';
 import 'package:attendance/widgets/subjectCard.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
         Subject.routeName: (_) => const Subject(),
         HomeScreen.routeName: (_) => const HomeScreen(),
         SubjectScreen.routeName: (_) => SubjectScreen(),
+        AddingSubjScreen.routeName: (_) => AddingSubjScreen(),
       },
     );
   }

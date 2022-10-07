@@ -41,8 +41,9 @@ Future<void> creatingDB(
   //subject Details model class
   subjectDetails.map((subjectDetail) async {
     final _subjectId = await subjectDB.add(subjectDetail);
+
     subjectDetail.id = _subjectId;
-    print('testing id $_subjectId');
+    subjectDB.put(_subjectId, subjectDetail);
   }).toList();
   retreiveUserDetails();
   // print('passing data$subjectDetails');
@@ -65,7 +66,8 @@ Future<void> retreiveUserDetails() async {
 
   weeks = getUserDetails.values.first.workingDays;
   final _subjectsDetails = await Hive.openBox<SubjectDetails>("SubjectDB");
-  // print(getUserDetails.values.first.);
+
+  _subjectsDetails.values.map((e) {});
   _subjectsDetails.values.map((subj) {
     subjects.add(subj.subjectName);
     print('iddd${subj.id}');
@@ -74,7 +76,7 @@ Future<void> retreiveUserDetails() async {
         subj.id: [subj.totalClassesAttended, subj.totalClassesTaken]
       });
     }
-    print('calss Ateed${classAttended.value.values}');
+    print('calss Ateed${classAttended.value}');
   }).toList();
   //  week.addAll(getUserDetails.values[]);
   classAttended.notifyListeners();

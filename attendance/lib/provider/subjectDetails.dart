@@ -49,13 +49,13 @@ Future<void> creatingDB(
 }
 
 List<String> weeks = [];
-List<String> subjects = [];
+ValueNotifier<List<String>> subjects = ValueNotifier([]);
 ValueNotifier<Map<int?, List<int>>> classAttended = ValueNotifier({});
 List<String> userInfo = [];
 //Fetching Informations from DB
 Future<void> retreiveUserDetails() async {
   //weeks.clear();
-  subjects.clear();
+  subjects.value.clear();
   classAttended.value.clear();
   final getUserDetails = await Hive.openBox<UserDetails>("UserDB");
   //Collecting user Information to userInfo, it is passed to userInfo Screen
@@ -67,7 +67,8 @@ Future<void> retreiveUserDetails() async {
   final _subjectsDetails = await Hive.openBox<SubjectDetails>("SubjectDB");
   // print(getUserDetails.values.first.);
   _subjectsDetails.values.map((subj) {
-    subjects.add(subj.subjectName);
+    subjects.value.add(subj.subjectName);
+    
     print('iddd${subj.id}');
     if (subj.id != null) {
       classAttended.value.addAll({
@@ -77,8 +78,9 @@ Future<void> retreiveUserDetails() async {
     print('calss Ateed${classAttended.value.values}');
   }).toList();
   //  week.addAll(getUserDetails.values[]);
+  subjects.notifyListeners();
   classAttended.notifyListeners();
-  print('id is${_subjectsDetails.values.first.id}');
+  
 }
 
 Future<void> present(SubjectDetails seleSub) async {
@@ -161,6 +163,7 @@ Future<void> updateUserDetails(
   retreiveUserDetails();
 }
 
+//Adding New Subject
 Future<void> addNewSubject(
     String newSubjecName, int newNoofClassPresent, int newTotalClass) async {
   final _openSubject = await Hive.openBox<SubjectDetails>('SubjectDB');
@@ -168,7 +171,23 @@ Future<void> addNewSubject(
       subjectName: newSubjecName,
       totalClassesTaken: newTotalClass,
       totalClassesAttended: newNoofClassPresent);
-  final _newSubjID = await _openSubject.add(_newSubject);
-  _newSubject.id = _newSubjID;
+  final _newSubjID = await _openSubject
+      .add(_newSubject)
+      .then((value) => _newSubject.id = value);
+
   retreiveUserDetails();
+  classAttended.notifyListeners();
+  subjects.notifyListeners();
+}
+
+//Deleting Existing Subjects
+Future<void> deleteSubject(int deleteSubjId) async {
+  final _openSubject = await Hive.openBox<SubjectDetails>("SubjectDB");
+
+  await _openSubject.delete(deleteSubjId);
+ 
+  retreiveUserDetails();
+  subjects.notifyListeners();
+  classAttended.notifyListeners();
+
 }

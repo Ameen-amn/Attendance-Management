@@ -20,11 +20,18 @@ class SubjectDetailsBar extends StatefulWidget {
 class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
   int globalSubIndex = 0;
   late String? today = weeks[0] /* 'Monday' */;
-  late String? currentSubj = subjects[globalSubIndex];
+
+  late String? currentSubj = 'ss';
   //final List demoWorkingdays = ['Monday', 'Tuesday'];
   final List demoSubjects = ['Python', 'SS'];
   @override
   Widget build(BuildContext context) {
+    ValueListenableBuilder(
+        valueListenable: subjects,
+        builder: (BuildContext ctx, List<String> subjectList, Widget? _) {
+          currentSubj = subjectList[globalSubIndex];
+          return SizedBox();
+        });
     return Container(
       height: MediaQuery.of(context).size.height * 0.28,
       width: double.infinity,
@@ -64,23 +71,30 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                     },
                     value: today,
                   ),
-                  DropdownButton(
-                    items: /* userDetails['subjects'] */
-                        subjects
-                            .map<DropdownMenuItem<String>>(
-                                (subject) => DropdownMenuItem<String>(
-                                      value: subject,
-                                      child: Text(subject),
-                                    ))
-                            .toList(),
-                    onChanged: (nowSubj) {
-                      setState(() {
-                        globalSubIndex = subjects.indexOf(nowSubj.toString());
-                        currentSubj = nowSubj.toString();
-                      });
+                  ValueListenableBuilder(
+                    valueListenable: subjects,
+                    builder: (BuildContext ctx, List<String> subjectList,
+                        Widget? _) {
+                      return DropdownButton(
+                        items: /* userDetails['subjects'] */
+                            subjectList
+                                .map<DropdownMenuItem<String>>(
+                                    (subject) => DropdownMenuItem<String>(
+                                          value: subject,
+                                          child: Text(subject),
+                                        ))
+                                .toList(),
+                        onChanged: (nowSubj) {
+                          setState(() {
+                            globalSubIndex =
+                                subjectList.indexOf(nowSubj.toString());
+                            currentSubj = nowSubj.toString();
+                          });
+                        },
+                        value: currentSubj,
+                      );
                     },
-                    value: currentSubj,
-                  )
+                  ),
                 ],
               ),
               //Percentage Circle
@@ -92,6 +106,8 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                         Map<int?, List<int>> classAttend, Widget? _) {
                       int percentage = 0;
                       //  subject=classAttend.keys.firstWhere((element) => subjectD,)
+                      //Checking dinominator is zero or not
+                      print('chacking class${classAttend[globalSubIndex]}');
                       if (classAttend[globalSubIndex]![1] != 0) {
                         if (classAttend[globalSubIndex] != null) {
                           percentage = ((classAttend[globalSubIndex]![0] /

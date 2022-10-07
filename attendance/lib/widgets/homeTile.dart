@@ -51,13 +51,17 @@ class HomeTile extends StatelessWidget {
                     Widget? _) {
                   int percentage = 0;
                   //  subject=classAttend.keys.firstWhere((element) => subjectD,)
-                  if (classAttend[itemIndex]![1] != 0) {
-                    if (classAttend[itemIndex] != null) {
-                      percentage = ((classAttend[itemIndex]![0] /
-                                  classAttend[itemIndex]![1]) *
-                              100)
-                          .floor();
+                  if (classAttend[itemIndex] != null) {
+                    if (classAttend[itemIndex]![1] != 0) {
+                      if (classAttend[itemIndex] != null) {
+                        percentage = ((classAttend[itemIndex]![0] /
+                                    classAttend[itemIndex]![1]) *
+                                100)
+                            .floor();
+                      }
                     }
+                  } else {
+                    print('eror on home tile found');
                   }
 
                   return PercentageCircle(

@@ -127,37 +127,48 @@ class _HomeScreenState extends State<HomeScreen> {
               ? ListView(
                   children: [
                     SubjectDetailsBar(),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.symmetric(vertical: 25),
-                      itemBuilder: (ctx, index) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () async {
-                            final _subjectsDetails =
-                                await Hive.openBox<SubjectDetails>("SubjectDB");
-                            final SubjectDetails passSubj = _subjectsDetails
-                                .values
-                                .firstWhere((_subjectD) =>
-                                    _subjectD.subjectName == subjects[index]);
-                            Navigator.of(context)
-                                .pushNamed(SubjectScreen.routeName,
-                                    arguments: SubjectDetails(
-                                      id: passSubj.id,
-                                      subjectName: subjects[index],
-                                      totalClassesTaken:
-                                          classAttended.value[index]![1],
-                                      totalClassesAttended:
-                                          classAttended.value[index]![0],
-                                    ));
-                          },
-                          child: HomeTile(
-                              tileHead: subjects[index],
-                              clss: classAttended,
-                              itemIndex: index),
-                        ),
-                      ),
-                      itemCount: subjects.length,
+                    //
+                    /*HOME SCREEN LIST TILE*/
+                    //
+                    ValueListenableBuilder(
+                      valueListenable: subjects,
+                      builder: (BuildContext ctx, List<String> subjectList,
+                          Widget? _) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.symmetric(vertical: 25),
+                          itemBuilder: (ctx, index) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () async {
+                                final _subjectsDetails =
+                                    await Hive.openBox<SubjectDetails>(
+                                        "SubjectDB");
+                                final SubjectDetails passSubj = _subjectsDetails
+                                    .values
+                                    .firstWhere((_subjectD) =>
+                                        _subjectD.subjectName ==
+                                        subjectList[index]);
+                                Navigator.of(context)
+                                    .pushNamed(SubjectScreen.routeName,
+                                        arguments: SubjectDetails(
+                                          id: passSubj.id,
+                                          subjectName: subjectList[index],
+                                          totalClassesTaken:
+                                              classAttended.value[index]![1],
+                                          totalClassesAttended:
+                                              classAttended.value[index]![0],
+                                        ));
+                              },
+                              child: HomeTile(
+                                  tileHead: subjectList[index],
+                                  clss: classAttended,
+                                  itemIndex: index),
+                            ),
+                          ),
+                          itemCount: subjectList.length,
+                        );
+                      },
                     )
                   ],
                 )
@@ -240,15 +251,28 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             title: Text(
-                              subjects[i],
+                              subjects.value[i],
                               softWrap: true,
                             ),
                             trailing: IconButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  final _openSubj =
+                                      await Hive.openBox<SubjectDetails>(
+                                          "SubjectDB");
+                                  final _deleteSubj = _openSubj.values
+                                      .firstWhere((subject) =>
+                                          subjects.value[i] ==
+                                          subject.subjectName);
+                                  if (_deleteSubj.id != null) {
+                                    setState(() {
+                                      deleteSubject(_deleteSubj.id!);
+                                    });
+                                  }
+                                },
                                 icon: const Icon(Icons.delete_rounded)),
                           ),
                         ),
-                        itemCount: subjects.length,
+                        itemCount: subjects.value.length,
                       ),
                     ),
                   ],

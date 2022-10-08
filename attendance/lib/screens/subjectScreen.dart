@@ -32,7 +32,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
               100)
           .floor();
     } else {
-      percentage = 100;
+      percentage = 0;
     }
 
     super.didChangeDependencies();
@@ -66,16 +66,15 @@ class _SubjectScreenState extends State<SubjectScreen> {
         print('tot${_totalPeriods}');
         print('attper${_attendPeriods}');
         if (subjectD.id != null) {
+          print('error found in updating');
           updateTotalClassess(subjectD.id, _totalPeriods, _attendPeriods);
           setState(() {
             _edit = !_edit;
           });
-         
         } else {
-          print(subjectD.id);
+          print('error found${subjectD.id}');
         }
       }
-    
     }
 
     return Scaffold(
@@ -191,7 +190,5 @@ class _SubjectScreenState extends State<SubjectScreen> {
         ),
       ),
     );
-    
   }
-    
 }

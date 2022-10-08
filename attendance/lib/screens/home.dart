@@ -51,10 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _edit = false;
   late String _userNameHistory;
   late String _attendancePercentageHistory;
+  List<List<int>> listlist = classAttended.value.values.toList();
   @override
   Widget build(BuildContext context) {
+    print('list list $listlist');
     // double height = MediaQuery.of(context).size.height;
-    print('second $subjects');
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -130,43 +132,51 @@ class _HomeScreenState extends State<HomeScreen> {
                     //
                     /*HOME SCREEN LIST TILE*/
                     //
+
                     ValueListenableBuilder(
-                      valueListenable: subjects,
-                      builder: (BuildContext ctx, List<String> subjectList,
-                          Widget? _) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.symmetric(vertical: 25),
-                          itemBuilder: (ctx, index) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () async {
-                                final _subjectsDetails =
-                                    await Hive.openBox<SubjectDetails>(
-                                        "SubjectDB");
-                                final SubjectDetails passSubj = _subjectsDetails
-                                    .values
-                                    .firstWhere((_subjectD) =>
-                                        _subjectD.subjectName ==
-                                        subjectList[index]);
-                                Navigator.of(context)
-                                    .pushNamed(SubjectScreen.routeName,
+                      valueListenable: classAttended,
+                      builder: (BuildContext ctx,
+                          Map<int?, List<int>> classAttend, Widget? _) {
+                        final lastlist = classAttend.values.toList();
+                        return ValueListenableBuilder(
+                          valueListenable: subjects,
+                          builder: (BuildContext ctx, List<String> subjectList,
+                              Widget? _) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.symmetric(vertical: 25),
+                              itemBuilder: (ctx, index) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    final _subjectsDetails =
+                                        await Hive.openBox<SubjectDetails>(
+                                            "SubjectDB");
+                                    final SubjectDetails passSubj =
+                                        _subjectsDetails
+                                            .values
+                                            .firstWhere((_subjectD) =>
+                                                _subjectD.subjectName ==
+                                                subjectList[index]);
+                                    Navigator.of(context).pushNamed(
+                                        SubjectScreen.routeName,
                                         arguments: SubjectDetails(
                                           id: passSubj.id,
                                           subjectName: subjectList[index],
-                                          totalClassesTaken:
-                                              classAttended.value[index]![1],
-                                          totalClassesAttended:
-                                              classAttended.value[index]![0],
+                                          totalClassesTaken: lastlist[index][1],
+                                          totalClassesAttended: lastlist[index]
+                                              [0],
                                         ));
-                              },
-                              child: HomeTile(
-                                  tileHead: subjectList[index],
-                                  clss: classAttended,
-                                  itemIndex: index),
-                            ),
-                          ),
-                          itemCount: subjectList.length,
+                                  },
+                                  child: HomeTile(
+                                      tileHead: subjectList[index],
+                                      clss: classAttended,
+                                      itemIndex: index),
+                                ),
+                              ),
+                              itemCount: subjectList.length,
+                            );
+                          },
                         );
                       },
                     )
@@ -285,8 +295,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_userName.text.isNotEmpty && _attendancePercentage.text.isNotEmpty) {
       if (int.parse(_attendancePercentage.text) >= 0 ||
           int.parse(_attendancePercentage.text) <= 100) {
-        updateUserDetails(
-            _userName.text, int.parse(_attendancePercentage.text));
+        setState(() {
+          updateUserDetails(
+              _userName.text, int.parse(_attendancePercentage.text));
+          _edit = !_edit;
+        });
       }
     }
   }

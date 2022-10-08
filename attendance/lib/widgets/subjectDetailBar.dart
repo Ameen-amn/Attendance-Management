@@ -21,17 +21,17 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
   int globalSubIndex = 0;
   late String? today = weeks[0] /* 'Monday' */;
 
-  late String? currentSubj = 'ss';
+  late String? currentSubj = subjects.value[globalSubIndex];
   //final List demoWorkingdays = ['Monday', 'Tuesday'];
   final List demoSubjects = ['Python', 'SS'];
   @override
   Widget build(BuildContext context) {
-    ValueListenableBuilder(
+    /* ValueListenableBuilder(
         valueListenable: subjects,
         builder: (BuildContext ctx, List<String> subjectList, Widget? _) {
           currentSubj = subjectList[globalSubIndex];
           return SizedBox();
-        });
+        }); */
     return Container(
       height: MediaQuery.of(context).size.height * 0.28,
       width: double.infinity,
@@ -105,13 +105,13 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                     builder: (BuildContext ctx,
                         Map<int?, List<int>> classAttend, Widget? _) {
                       int percentage = 0;
-                      //  subject=classAttend.keys.firstWhere((element) => subjectD,)
+                      final lastlist = classAttend.values.toList();
                       //Checking dinominator is zero or not
                       print('chacking class${classAttend[globalSubIndex]}');
-                      if (classAttend[globalSubIndex]![1] != 0) {
-                        if (classAttend[globalSubIndex] != null) {
-                          percentage = ((classAttend[globalSubIndex]![0] /
-                                      classAttend[globalSubIndex]![1]) *
+                      if (lastlist[globalSubIndex][1] != 0) {
+                        if (lastlist[globalSubIndex] != null) {
+                          percentage = ((lastlist[globalSubIndex][0] /
+                                      lastlist[globalSubIndex][1]) *
                                   100)
                               .floor();
                         }

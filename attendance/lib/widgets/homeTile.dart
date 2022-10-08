@@ -1,3 +1,4 @@
+import 'package:attendance/provider/subjectDetails.dart';
 import 'package:attendance/widgets/percentage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,18 +51,27 @@ class HomeTile extends StatelessWidget {
                 builder: (BuildContext ctx, Map<int?, List<int>> classAttend,
                     Widget? _) {
                   int percentage = 0;
-                  //  subject=classAttend.keys.firstWhere((element) => subjectD,)
-                  if (classAttend[itemIndex] != null) {
-                    if (classAttend[itemIndex]![1] != 0) {
-                      if (classAttend[itemIndex] != null) {
-                        percentage = ((classAttend[itemIndex]![0] /
-                                    classAttend[itemIndex]![1]) *
+                  /*  classAttend.keys.map((e) async {
+                    final _reqSubject = await findingSubject(e!);
+                    if (_reqSubject.totalClassesTaken != 0) {
+                      percentage = ((_reqSubject.totalClassesAttended /
+                                  _reqSubject.totalClassesTaken) *
+                              100)
+                          .floor();
+                    } else {
+                      percentage = 0;
+                    }
+                  }); */
+                  final lastlist = classAttend.values.toList();
+
+                  // final _subj = findingSubject(tileHead);
+                  // print('itemIndexx${classAttend[itemIndex]}');
+
+                  if (lastlist[itemIndex][1] != 0) {
+                    percentage =
+                        ((lastlist[itemIndex][0] / lastlist[itemIndex][1]) *
                                 100)
                             .floor();
-                      }
-                    }
-                  } else {
-                    print('eror on home tile found');
                   }
 
                   return PercentageCircle(

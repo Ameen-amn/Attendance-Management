@@ -42,6 +42,8 @@ Future<void> creatingDB(
   subjectDetails.map((subjectDetail) async {
     final _subjectId = await subjectDB.add(subjectDetail);
     subjectDetail.id = _subjectId;
+
+    subjectDB.put(_subjectId, subjectDetail);
     print('testing id $_subjectId');
   }).toList();
   retreiveUserDetails();
@@ -55,6 +57,7 @@ List<String> userInfo = [];
 //Fetching Informations from DB
 Future<void> retreiveUserDetails() async {
   //weeks.clear();
+  userInfo.clear();
   subjects.value.clear();
   classAttended.value.clear();
   final getUserDetails = await Hive.openBox<UserDetails>("UserDB");
@@ -68,7 +71,7 @@ Future<void> retreiveUserDetails() async {
   // print(getUserDetails.values.first.);
   _subjectsDetails.values.map((subj) {
     subjects.value.add(subj.subjectName);
-    
+
     print('iddd${subj.id}');
     if (subj.id != null) {
       classAttended.value.addAll({
@@ -80,7 +83,6 @@ Future<void> retreiveUserDetails() async {
   //  week.addAll(getUserDetails.values[]);
   subjects.notifyListeners();
   classAttended.notifyListeners();
-  
 }
 
 Future<void> present(SubjectDetails seleSub) async {
@@ -95,7 +97,7 @@ Future<void> present(SubjectDetails seleSub) async {
   );
   print(_updatedSubj.id);
   if (_updatedSubj.id != null) {
-    present.putAt(_updatedSubj.id!, _updatedSubj);
+    present.put(_updatedSubj.id!, _updatedSubj);
   } else {
     print('updation FAiled :${_updatedSubj.id}');
   }
@@ -118,7 +120,7 @@ Future<void> abscent(SubjectDetails seleSub) async {
   );
   print('ih${_updatedSubj.id}');
   if (_updatedSubj.id != null) {
-    abscent.putAt(_updatedSubj.id!, _updatedSubj);
+    abscent.put(_updatedSubj.id!, _updatedSubj);
   } else {
     print('updation FAiled :${_updatedSubj.id}');
   }
@@ -136,9 +138,13 @@ Future<void> updateTotalClassess(
       subjectName: _selectSubj.subjectName,
       totalClassesTaken: totalClass,
       totalClassesAttended: presentClasses);
-  print('clss$_selectSubj');
+
   if (_updateSubj.id != null) {
-    _openSub.putAt(_updateSubj.id!, _updateSubj);
+    print('not here');
+    _openSub.put(_updateSubj.id, _updateSubj);
+    // _openSub.putAt(_updateSubj.id!, _updateSubj);
+
+    print(' here');
   }
   final sub = _openSub.values.firstWhere((subj) => subj.id == _selectSubj.id);
   retreiveUserDetails();
@@ -159,7 +165,7 @@ Future<void> updateUserDetails(
       workingDays: _existingUser.workingDays,
       timeTableAdded: _existingUser.timeTableAdded,
       subjects: _existingUser.subjects);
-  _openUserDB.putAt(_updateUser.id!, _updateUser);
+  _openUserDB.put(_updateUser.id!, _updateUser);
   retreiveUserDetails();
 }
 
@@ -171,9 +177,9 @@ Future<void> addNewSubject(
       subjectName: newSubjecName,
       totalClassesTaken: newTotalClass,
       totalClassesAttended: newNoofClassPresent);
-  final _newSubjID = await _openSubject
-      .add(_newSubject)
-      .then((value) => _newSubject.id = value);
+  final _newSubjID = await _openSubject.add(_newSubject);
+  _newSubject.id = _newSubjID;
+  _openSubject.put(_newSubjID, _newSubject);
 
   retreiveUserDetails();
   classAttended.notifyListeners();
@@ -183,11 +189,21 @@ Future<void> addNewSubject(
 //Deleting Existing Subjects
 Future<void> deleteSubject(int deleteSubjId) async {
   final _openSubject = await Hive.openBox<SubjectDetails>("SubjectDB");
+  final _deleteSubjName =
+      _openSubject.values.firstWhere((subj) => subj.id == deleteSubjId);
 
   await _openSubject.delete(deleteSubjId);
- 
+  classAttended.value.remove(deleteSubjId);
+  subjects.value.remove(_deleteSubjName);
+  print('class arrent${classAttended.value}');
   retreiveUserDetails();
   subjects.notifyListeners();
   classAttended.notifyListeners();
+}
 
+//finding Subject
+Future<SubjectDetails> findingSubject(int subjid) async {
+  final _openSubj = await Hive.openBox<SubjectDetails>("SubjectDB");
+  final reqSubj = _openSubj.values.firstWhere((_subj) => _subj.id == subjid);
+  return reqSubj;
 }

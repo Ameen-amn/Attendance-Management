@@ -129,24 +129,25 @@ Future<void> abscent(SubjectDetails seleSub) async {
 }
 
 Future<void> updateTotalClassess(
-    int? key, int totalClass, int presentClasses) async {
+    int? key, int totalClass, int presentClasses, String newSubjName) async {
   print('key$key');
   final _openSub = await Hive.openBox<SubjectDetails>('SubjectDB');
   final _selectSubj = _openSub.values.firstWhere((_subj) => _subj.id == key);
   SubjectDetails _updateSubj = SubjectDetails(
       id: _selectSubj.id,
-      subjectName: _selectSubj.subjectName,
+      subjectName: newSubjName,
       totalClassesTaken: totalClass,
       totalClassesAttended: presentClasses);
 
   if (_updateSubj.id != null) {
     print('not here');
     _openSub.put(_updateSubj.id, _updateSubj);
+
     // _openSub.putAt(_updateSubj.id!, _updateSubj);
 
     print(' here');
   }
-  final sub = _openSub.values.firstWhere((subj) => subj.id == _selectSubj.id);
+
   retreiveUserDetails();
   classAttended.notifyListeners();
 }
@@ -196,7 +197,7 @@ Future<void> deleteSubject(int deleteSubjId) async {
   classAttended.value.remove(deleteSubjId);
   subjects.value.remove(_deleteSubjName);
   print('class arrent${classAttended.value}');
-  retreiveUserDetails();
+  await retreiveUserDetails();
   subjects.notifyListeners();
   classAttended.notifyListeners();
 }
@@ -206,4 +207,15 @@ Future<SubjectDetails> findingSubject(int subjid) async {
   final _openSubj = await Hive.openBox<SubjectDetails>("SubjectDB");
   final reqSubj = _openSubj.values.firstWhere((_subj) => _subj.id == subjid);
   return reqSubj;
+}
+
+Future<bool> nameCheck(String subjName) async {
+  bool exists = false;
+  final _openBox = await Hive.openBox<SubjectDetails>("SubjectDB");
+  _openBox.values.forEach((element) {
+    if (element.subjectName == subjName) {
+      exists = true;
+    }
+  });
+  return exists;
 }

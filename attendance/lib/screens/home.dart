@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
           bottomBarIndex == 0
               ? IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed(AddingSubjScreen.routeName);
+                    Navigator.of(context).pushNamedAndRemoveUntil(AddingSubjScreen.routeName,(Route<dynamic> route) => false);
                   },
                   icon: const Icon(
                     Icons.add_rounded,

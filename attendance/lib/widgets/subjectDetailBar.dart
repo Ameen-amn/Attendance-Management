@@ -22,8 +22,7 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
   late String? today = weeks[0] /* 'Monday' */;
 
   late String? currentSubj = subjects.value[globalSubIndex];
-  //final List demoWorkingdays = ['Monday', 'Tuesday'];
-  final List demoSubjects = ['Python', 'SS'];
+
   @override
   Widget build(BuildContext context) {
     /* ValueListenableBuilder(

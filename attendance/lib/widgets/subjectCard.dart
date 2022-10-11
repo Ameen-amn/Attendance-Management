@@ -1,11 +1,14 @@
+import 'package:attendance/provider/subjectDetails.dart';
 import 'package:flutter/material.dart';
 import './percentage.dart';
 
 /*CARD IS USED TO DISPLAY INSIDE A SUBJECT */
 class SubjectCard extends StatefulWidget {
   final double percentage;
+  final String subjStatus;
   const SubjectCard({
     required this.percentage,
+    required this.subjStatus,
     Key? key,
     //required this.subjName,
   }) : super(key: key);
@@ -48,9 +51,9 @@ class _SubjectCardState extends State<SubjectCard> {
               animation: true,
             ),
           ),
-          const Padding(
+           Padding(
             padding: const EdgeInsets.fromLTRB(0, 6, 0, 18),
-            child: Text("Number of Class short with"),
+            child: Text(widget.subjStatus),
           ),
         ],
       ),

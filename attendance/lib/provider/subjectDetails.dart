@@ -54,6 +54,9 @@ List<String> weeks = [];
 ValueNotifier<List<String>> subjects = ValueNotifier([]);
 ValueNotifier<Map<int?, List<int>>> classAttended = ValueNotifier({});
 List<String> userInfo = [];
+String status = '';
+int percentage = 0;
+int globalSubIndex = 0;
 //Fetching Informations from DB
 Future<void> retreiveUserDetails() async {
   //weeks.clear();
@@ -83,6 +86,14 @@ Future<void> retreiveUserDetails() async {
   //  week.addAll(getUserDetails.values[]);
   subjects.notifyListeners();
   classAttended.notifyListeners();
+  final lastlist = classAttended.value.values.toList();
+
+  if (lastlist[globalSubIndex][1] != 0) {
+    percentage =
+        ((lastlist[globalSubIndex][0] / lastlist[globalSubIndex][1]) * 100)
+            .floor();
+  }
+  status = reqClasses(percentage, int.parse(userInfo[2]), globalSubIndex);
 }
 
 Future<void> present(SubjectDetails seleSub) async {
@@ -103,6 +114,15 @@ Future<void> present(SubjectDetails seleSub) async {
   }
   retreiveUserDetails();
   classAttended.notifyListeners();
+  final lastlist = classAttended.value.values.toList();
+
+  if (lastlist[globalSubIndex][1] != 0) {
+    percentage =
+        ((lastlist[globalSubIndex][0] / lastlist[globalSubIndex][1]) * 100)
+            .floor();
+  }
+  status = reqClasses(percentage, int.parse(userInfo[2]), globalSubIndex);
+
 //  present.put(seleSub.id, seleSub.totalClassesAttended+1)
 }
 
@@ -126,16 +146,24 @@ Future<void> abscent(SubjectDetails seleSub) async {
   }
   retreiveUserDetails();
   classAttended.notifyListeners();
+  final lastlist = classAttended.value.values.toList();
+
+  if (lastlist[globalSubIndex][1] != 0) {
+    percentage =
+        ((lastlist[globalSubIndex][0] / lastlist[globalSubIndex][1]) * 100)
+            .floor();
+  }
+  status = reqClasses(percentage, int.parse(userInfo[2]), globalSubIndex);
 }
 
 Future<void> updateTotalClassess(
-    int? key, int totalClass, int presentClasses) async {
+    int? key, int totalClass, int presentClasses, String newSubjName) async {
   print('key$key');
   final _openSub = await Hive.openBox<SubjectDetails>('SubjectDB');
   final _selectSubj = _openSub.values.firstWhere((_subj) => _subj.id == key);
   SubjectDetails _updateSubj = SubjectDetails(
       id: _selectSubj.id,
-      subjectName: _selectSubj.subjectName,
+      subjectName: newSubjName,
       totalClassesTaken: totalClass,
       totalClassesAttended: presentClasses);
 
@@ -149,6 +177,7 @@ Future<void> updateTotalClassess(
   final sub = _openSub.values.firstWhere((subj) => subj.id == _selectSubj.id);
   retreiveUserDetails();
   classAttended.notifyListeners();
+  subjects.notifyListeners();
 }
 
 /*Updaing User Details in UserDB*/
@@ -206,4 +235,50 @@ Future<SubjectDetails> findingSubject(int subjid) async {
   final _openSubj = await Hive.openBox<SubjectDetails>("SubjectDB");
   final reqSubj = _openSubj.values.firstWhere((_subj) => _subj.id == subjid);
   return reqSubj;
+}
+
+String reqClasses(int percentage, int reqPercentage, int subjId) {
+  final reqSubj = classAttended.value.entries
+      .firstWhere((element) => element.key == subjId);
+  int reqclass = 0;
+  int totalClass = reqSubj.value[1];
+  int attendedClass = reqSubj.value[0];
+  print('req %$reqPercentage');
+  print('percentage $percentage');
+  print('toal cals$totalClass');
+  print('attend class $attendedClass');
+  if (reqPercentage == percentage) {
+    return 'Reached your % attend 1 more to maintain';
+  } else if (reqPercentage > percentage) {
+    if (percentage == 0) {
+      return 'Attend at least 1 class';
+    }
+    reqclass = ((totalClass * (reqPercentage / 100) - attendedClass) ~/
+        (1 - (reqPercentage / 100)));
+    print(' testing Statues$subjId $reqclass');
+    return 'Attend $reqclass'; //classes to get your required Percentage
+  } else if (reqPercentage < percentage) {
+    reqclass = ((attendedClass - (totalClass * (reqPercentage / 100))) ~/
+        (reqPercentage / 100));
+    print('req clss $reqclass');
+    reqclass = reqclass.floor();
+    if (reqclass >= 1) {
+      return 'You can skip $reqclass class';
+    } else {
+      return 'Skipping class will keep you off track';
+    }
+  } else {
+    return 'Attend 1 more class '; //to maintain your required percentage';
+  }
+}
+
+Future<bool> nameCheck(String subjName) async {
+  bool exists = false;
+  final _openBox = await Hive.openBox<SubjectDetails>("SubjectDB");
+  final status = _openBox.values.forEach((element) {
+    if (element.subjectName == subjName) {
+      exists = true;
+    }
+  });
+  return exists;
 }

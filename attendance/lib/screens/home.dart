@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String _userNameHistory;
   late String _attendancePercentageHistory;
   List<List<int>> listlist = classAttended.value.values.toList();
+  late String? currentSubj = subjects.value[globalSubIndex];
   @override
   Widget build(BuildContext context) {
     print('list list $listlist');
@@ -64,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: bottomBarIndex == 0
             ? const Text(
                 'Attendance Report',
+                softWrap: true,
                 style: TextStyle(color: Colors.black54),
               )
             : const Text(
@@ -121,14 +123,44 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
       body: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 10),
           child: bottomBarIndex == 0
               ? ListView(
                   children: [
-                    SubjectDetailsBar(),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: ValueListenableBuilder(
+                        valueListenable: subjects,
+                        builder: (BuildContext ctx, List<String> subjectList,
+                            Widget? _) {
+                          return DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              isExpanded: false,
+                              items: /* userDetails['subjects'] */
+                                  subjectList
+                                      .map<DropdownMenuItem<String>>(
+                                          (subject) => DropdownMenuItem<String>(
+                                                value: subject,
+                                                child: Text(
+                                                  subject,
+                                                  softWrap: true,
+                                                ),
+                                              ))
+                                      .toList(),
+                              onChanged: (nowSubj) {
+                                setState(() {
+                                  globalSubIndex =
+                                      subjectList.indexOf(nowSubj.toString());
+                                  currentSubj = nowSubj.toString();
+                                });
+                              },
+                              value: currentSubj,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SubjectDetailsBar(currentSubj: currentSubj),
                     //
                     /*HOME SCREEN LIST TILE*/
                     //

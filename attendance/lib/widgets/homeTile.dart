@@ -72,6 +72,8 @@ class HomeTile extends StatelessWidget {
                         ((lastlist[itemIndex][0] / lastlist[itemIndex][1]) *
                                 100)
                             .floor();
+                  } else {
+                    percentage = 0;
                   }
 
                   return PercentageCircle(

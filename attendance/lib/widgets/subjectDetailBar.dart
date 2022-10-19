@@ -7,8 +7,11 @@ import 'package:hive_flutter/adapters.dart';
 import './percentage.dart';
 
 class SubjectDetailsBar extends StatefulWidget {
+  final String? currentSubject;
   const SubjectDetailsBar({
+    required this.currentSubject,
     Key? key,
+
     // required this.height,
   }) : super(key: key);
   // final double height;
@@ -18,25 +21,16 @@ class SubjectDetailsBar extends StatefulWidget {
 }
 
 class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
-  int globalSubIndex = 0;
   late String? today = weeks[0] /* 'Monday' */;
-
-  late String? currentSubj = subjects.value[globalSubIndex];
 
   @override
   Widget build(BuildContext context) {
-    /* ValueListenableBuilder(
-        valueListenable: subjects,
-        builder: (BuildContext ctx, List<String> subjectList, Widget? _) {
-          currentSubj = subjectList[globalSubIndex];
-          return SizedBox();
-        }); */
     return Container(
       height: MediaQuery.of(context).size.height * 0.28,
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       decoration: BoxDecoration(
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
               color: Colors.black26,
               blurRadius: 2,
@@ -54,7 +48,8 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
             children: [
               Column(
                 children: [
-                  DropdownButton(
+                  //Weeekss
+                  /*  DropdownButton(
                     items: /* userDetails['WorkingDays'] */
                         weeks
                             .map<DropdownMenuItem<String>>(
@@ -69,32 +64,16 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                       });
                     },
                     value: today,
-                  ),
-                  ValueListenableBuilder(
-                    valueListenable: subjects,
-                    builder: (BuildContext ctx, List<String> subjectList,
-                        Widget? _) {
-                      return DropdownButton(
-                        items: /* userDetails['subjects'] */
-                            subjectList
-                                .map<DropdownMenuItem<String>>(
-                                    (subject) => DropdownMenuItem<String>(
-                                          value: subject,
-                                          child: Text(subject),
-                                        ))
-                                .toList(),
-                        onChanged: (nowSubj) {
-                          setState(() {
-                            globalSubIndex =
-                                subjectList.indexOf(nowSubj.toString());
-                            currentSubj = nowSubj.toString();
-                          });
-                        },
-                        value: currentSubj,
-                      );
-                    },
-                  ),
+                  ), */
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 4),
+                child: Text(
+                  subjects.value[globalSubIndex],
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(fontSize: 26),
+                ),
               ),
               //Percentage Circle
               Padding(
@@ -103,17 +82,16 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                     valueListenable: classAttended,
                     builder: (BuildContext ctx,
                         Map<int?, List<int>> classAttend, Widget? _) {
-                      int percentage = 0;
                       final lastlist = classAttend.values.toList();
                       //Checking dinominator is zero or not
                       print('chacking class${classAttend[globalSubIndex]}');
                       if (lastlist[globalSubIndex][1] != 0) {
-                        if (lastlist[globalSubIndex] != null) {
-                          percentage = ((lastlist[globalSubIndex][0] /
-                                      lastlist[globalSubIndex][1]) *
-                                  100)
-                              .floor();
-                        }
+                        percentage = ((lastlist[globalSubIndex][0] /
+                                    lastlist[globalSubIndex][1]) *
+                                100)
+                            .floor();
+                      } else {
+                        percentage = 0;
                       }
 
                       return PercentageCircle(
@@ -127,22 +105,30 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
               ),
             ],
           ),
-          const Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 8,
-            ),
-            child: Text("No of Periods you are short with ${3}"),
-          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+              ),
+              child: Text(status)
+
+              /* ValueListenableBuilder(
+              valueListenable: status,
+              builder: (BuildContext ctx, String state, Widget? _) {
+                
+                return Text(state);
+              },
+            ), */
+              ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
                 onPressed: () async {
-                  final _updateSub =
-                      await Hive.openBox<SubjectDetails>('SubjectDB').then(
-                          (subjects) => subjects.values.firstWhere(
-                              (selectSubj) =>
-                                  selectSubj.subjectName == currentSubj));
+                  final _updateSub = await Hive.openBox<SubjectDetails>(
+                          'SubjectDB')
+                      .then((subjects) => subjects.values.firstWhere(
+                          (selectSubj) =>
+                              selectSubj.subjectName == widget.currentSubject));
 
                   setState(() {
                     //updating dropdown and %chart automaticaly
@@ -154,6 +140,11 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                       currentSubj = subjects[globalSubIndex];
                     } */
                     present(_updateSub);
+                    status = reqClasses(
+                      percentage,
+                      int.parse(userInfo[2]),
+                      globalSubIndex,
+                    );
                   });
                 },
                 child: const Text(
@@ -173,11 +164,16 @@ class _SubjectDetailsBarState extends State<SubjectDetailsBar> {
                 onPressed: () async {
                   final _updateSub =
                       await Hive.openBox<SubjectDetails>('SubjectDB').then(
-                          (value) => value.values.firstWhere(
-                              (element) => element.subjectName == currentSubj));
+                          (value) => value.values.firstWhere((element) =>
+                              element.subjectName == widget.currentSubject));
                   print('wekkk${_updateSub.id}');
                   setState(() {
                     abscent(_updateSub);
+                    status = reqClasses(
+                      percentage,
+                      int.parse(userInfo[2]),
+                      globalSubIndex,
+                    );
                   });
                 },
                 child: const Text(

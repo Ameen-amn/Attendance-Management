@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:attendance/bottomNavBar.dart';
 import 'package:attendance/constants.dart';
 import 'package:attendance/provider/subjectDetails.dart';
@@ -36,7 +34,11 @@ class _SubjectScreenState extends State<SubjectScreen> {
     } else {
       percentage = 0;
     }
-
+    _subjStatus = subjStatus(
+        int.parse(userInfo[2]),
+        int.parse(totalPeriods.text),
+        int.parse(attendedPeriods.text),
+        percentage);
     super.didChangeDependencies();
   }
 
@@ -96,10 +98,14 @@ class _SubjectScreenState extends State<SubjectScreen> {
       appBar: AppBar(
         title: Text(subjName.text),
         leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName,(Route<dynamic> route) => false);
+            onPressed: () async {
+              await retreiveUserDetails();
+              Navigator.of(context).popAndPushNamed(
+                HomeScreen.routeName,
+              );
             },
-            icon: Icon(Icons.arrow_back_rounded)),
+            icon: const
+             Icon(Icons.arrow_back_rounded)),
         actions: [
           IconButton(
               onPressed: () {

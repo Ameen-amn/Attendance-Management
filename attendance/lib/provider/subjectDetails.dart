@@ -5,7 +5,7 @@ import './userDetails.dart';
 part 'subjectDetails.g.dart';
 
 @HiveType(typeId: 2)
-class SubjectDetails {
+class SubjectDetails  {
   @HiveField(0)
   int? id;
   @HiveField(1)
@@ -25,7 +25,7 @@ class SubjectDetails {
 
 }
 
-Future<void> creatingDB(
+Future<void> creatingDB  (
     List<SubjectDetails> subjectDetails, UserDetails _currentUser) async {
   //Storing Inforamation about the usesr
 
@@ -54,12 +54,17 @@ List<String> weeks = [];
 ValueNotifier<List<String>> subjects = ValueNotifier([]);
 ValueNotifier<Map<int?, List<int>>> classAttended = ValueNotifier({});
 List<String> userInfo = [];
+String status = '';
+int percentage = 0;
+int globalSubIndex = 0;
+late String? currentSubj = subjects.value[globalSubIndex];
 //Fetching Informations from DB
 Future<void> retreiveUserDetails() async {
   //weeks.clear();
   userInfo.clear();
   subjects.value.clear();
   classAttended.value.clear();
+
   final getUserDetails = await Hive.openBox<UserDetails>("UserDB");
   //Collecting user Information to userInfo, it is passed to userInfo Screen
   userInfo.add(getUserDetails.values.first.name);
@@ -83,6 +88,14 @@ Future<void> retreiveUserDetails() async {
   //  week.addAll(getUserDetails.values[]);
   subjects.notifyListeners();
   classAttended.notifyListeners();
+  final lastlist = classAttended.value.values.toList();
+
+  if (lastlist[globalSubIndex][1] != 0) {
+    percentage =
+        ((lastlist[globalSubIndex][0] / lastlist[globalSubIndex][1]) * 100)
+            .floor();
+  }
+  status = reqClasses(percentage, int.parse(userInfo[2]), globalSubIndex);
 }
 
 Future<void> present(SubjectDetails seleSub) async {
@@ -101,8 +114,16 @@ Future<void> present(SubjectDetails seleSub) async {
   } else {
     print('updation FAiled :${_updatedSubj.id}');
   }
-  retreiveUserDetails();
+  await retreiveUserDetails();
   classAttended.notifyListeners();
+  final lastlist = classAttended.value.values.toList();
+
+  if (lastlist[globalSubIndex][1] != 0) {
+    percentage =
+        ((lastlist[globalSubIndex][0] / lastlist[globalSubIndex][1]) * 100)
+            .floor();
+  }
+  status = reqClasses(percentage, int.parse(userInfo[2]), globalSubIndex);
 //  present.put(seleSub.id, seleSub.totalClassesAttended+1)
 }
 
@@ -124,8 +145,16 @@ Future<void> abscent(SubjectDetails seleSub) async {
   } else {
     print('updation FAiled :${_updatedSubj.id}');
   }
-  retreiveUserDetails();
+  await retreiveUserDetails();
   classAttended.notifyListeners();
+  final lastlist = classAttended.value.values.toList();
+
+  if (lastlist[globalSubIndex][1] != 0) {
+    percentage =
+        ((lastlist[globalSubIndex][0] / lastlist[globalSubIndex][1]) * 100)
+            .floor();
+  }
+  status = reqClasses(percentage, int.parse(userInfo[2]), globalSubIndex);
 }
 
 Future<void> updateTotalClassess(
@@ -148,8 +177,9 @@ Future<void> updateTotalClassess(
     print(' here');
   }
 
-  retreiveUserDetails();
+  await retreiveUserDetails();
   classAttended.notifyListeners();
+  subjects.notifyListeners();
 }
 
 /*Updaing User Details in UserDB*/
@@ -182,7 +212,7 @@ Future<void> addNewSubject(
   _newSubject.id = _newSubjID;
   _openSubject.put(_newSubjID, _newSubject);
 
-  retreiveUserDetails();
+  await retreiveUserDetails();
   classAttended.notifyListeners();
   subjects.notifyListeners();
 }
@@ -218,4 +248,39 @@ Future<bool> nameCheck(String subjName) async {
     }
   });
   return exists;
+}
+
+String reqClasses(int percentage, int reqPercentage, int subjId) {
+  final reqSubj = classAttended.value.entries
+      .firstWhere((element) => element.key == subjId);
+  int reqclass = 0;
+  int totalClass = reqSubj.value[1];
+  int attendedClass = reqSubj.value[0];
+  print('req %$reqPercentage');
+  print('percentage $percentage');
+  print('toal cals$totalClass');
+  print('attend class $attendedClass');
+  if (reqPercentage == percentage) {
+    return 'Reached your % attend 1 more to maintain';
+  } else if (reqPercentage > percentage) {
+    if (percentage == 0) {
+      return 'Attend at least 1 class';
+    }
+    reqclass = ((totalClass * (reqPercentage / 100) - attendedClass) ~/
+        (1 - (reqPercentage / 100)));
+    print(' testing Statues$subjId $reqclass');
+    return 'Attend $reqclass'; //classes to get your required Percentage
+  } else if (reqPercentage < percentage) {
+    reqclass = ((attendedClass - (totalClass * (reqPercentage / 100))) ~/
+        (reqPercentage / 100));
+    print('req clss $reqclass');
+    reqclass = reqclass.floor();
+    if (reqclass >= 1) {
+      return 'You can skip $reqclass class';
+    } else {
+      return 'Skipping class will keep you off track';
+    }
+  } else {
+    return 'Attend 1 more class '; //to maintain your required percentage';
+  }
 }

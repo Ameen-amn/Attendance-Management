@@ -19,9 +19,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController _userName = TextEditingController();
-  TextEditingController _totalSubjects = TextEditingController();
-  TextEditingController _attendancePercentage = TextEditingController();
+ final TextEditingController _userName = TextEditingController();
+ final TextEditingController _totalSubjects = TextEditingController();
+ final TextEditingController _attendancePercentage = TextEditingController();
 
   @override
   void didChangeDependencies() async {
@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _edit = false;
   late String _userNameHistory;
   late String _attendancePercentageHistory;
+  late String? currentSubj = subjects.value[globalSubIndex];
   List<List<int>> listlist = classAttended.value.values.toList();
   @override
   Widget build(BuildContext context) {
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           bottomBarIndex == 0
               ? IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(AddingSubjScreen.routeName,(Route<dynamic> route) => false);
+                    Navigator.of(context).pushNamed(AddingSubjScreen.routeName);
                   },
                   icon: const Icon(
                     Icons.add_rounded,
@@ -121,14 +122,44 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
       body: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 10),
           child: bottomBarIndex == 0
               ? ListView(
                   children: [
-                    SubjectDetailsBar(),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: ValueListenableBuilder(
+                        valueListenable: subjects,
+                        builder: (BuildContext ctx, List<String> subjectList,
+                            Widget? _) {
+                          return DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                              isExpanded: false,
+                              items: /* userDetails['subjects'] */
+                                  subjectList
+                                      .map<DropdownMenuItem<String>>(
+                                          (subject) => DropdownMenuItem<String>(
+                                                value: subject,
+                                                child: Text(
+                                                  subject,
+                                                  softWrap: true,
+                                                ),
+                                              ))
+                                      .toList(),
+                              onChanged: (nowSubj) {
+                                setState(() {
+                                  globalSubIndex =
+                                      subjectList.indexOf(nowSubj.toString());
+                                  currentSubj = nowSubj.toString();
+                                });
+                              },
+                              value: currentSubj,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SubjectDetailsBar(currentSubject: currentSubj),
                     //
                     /*HOME SCREEN LIST TILE*/
                     //
@@ -158,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .firstWhere((_subjectD) =>
                                                 _subjectD.subjectName ==
                                                 subjectList[index]);
-                                    Navigator.of(context).pushNamed(
+                                    Navigator.of(context).popAndPushNamed(
                                         SubjectScreen.routeName,
                                         arguments: SubjectDetails(
                                           id: passSubj.id,
